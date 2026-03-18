@@ -1,0 +1,112 @@
+'use client';
+import { useState } from 'react';
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '@/lib/firebase/config';
+import { useSessionStore } from '@/hooks/useSession';
+import { useRealtimeCollection } from '@/hooks/useRealtimeCollection';
+import { useRealtimeDocument } from '@/hooks/useRealtimeDocument';
+import type { IntroCard } from '@/types/intro';
+
+export default function IntroPage() {
+  const { courseId, sessionId, participantId, participantName } = useSessionStore();
+  const [content, setContent] = useState('');
+  const [tags, setTags] = useState('');
+  const [saving, setSaving] = useState(false);
+
+  const basePath = courseId && sessionId ? `courses/${courseId}/sessions/${sessionId}` : '';
+
+  const { data: myIntro } = useRealtimeDocument<IntroCard>(
+    basePath && participantId ? `${basePath}/introCards/${participantId}` : '',
+    !!(basePath && participantId)
+  );
+
+  const { data: allIntros } = useRealtimeCollection<IntroCard>(
+    basePath ? `${basePath}/introCards` : '', [], !!basePath
+  );
+
+  const handleSave = async () => {
+    if (!basePath || !participantId || !content.trim()) return;
+    setSaving(true);
+    try {
+      await setDoc(doc(db, `${basePath}/introCards`, participantId), {
+        participantName,
+        content: content.trim(),
+        photoUrl: null,
+        tags: tags.split(',').map((t) => t.trim()).filter(Boolean),
+        createdAt: myIntro?.createdAt || serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      });
+    } catch (err) {
+      console.error(err);
+    }
+    setSaving(false);
+  };
+
+  return (
+    <div className="space-y-6 animate-fade-in">
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+        <h2 className="text-lg font-bold text-slate-900 mb-4">👋 자기소개</h2>
+        <div className="space-y-3">
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">소개글</label>
+            <textarea
+              value={content || myIntro?.content || ''}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder="안녕하세요! 저는..."
+              rows={4}
+              className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition resize-none"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">태그 (쉼표로 구분)</label>
+            <input
+              type="text"
+              value={tags || myIntro?.tags?.join(', ') || ''}
+              onChange={(e) => setTags(e.target.value)}
+              placeholder="개발자, 서울, 커피좋아"
+              className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition"
+            />
+          </div>
+          <button
+            onClick={handleSave}
+            disabled={saving || !(content.trim() || myIntro?.content)}
+            className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 text-white font-semibold rounded-xl transition"
+          >
+            {saving ? '저장 중...' : myIntro ? '수정하기' : '등록하기'}
+          </button>
+        </div>
+      </div>
+
+      {allIntros.length > 0 && (
+        <div>
+          <h3 className="text-sm font-semibold text-slate-500 mb-3">참가자 소개 ({allIntros.length}명)</h3>
+          <div className="space-y-3">
+            {allIntros.map((intro) => (
+              <div key={intro.id} className="bg-white rounded-xl p-4 shadow-sm border border-slate-200 animate-fade-in">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center text-sm font-bold text-indigo-600">
+                    {intro.participantName[0]}
+                  </div>
+                  <span className="font-semibold text-sm text-slate-900">{intro.participantName}</span>
+                  {intro.id === participantId && (
+                    <span className="text-xs bg-indigo-100 text-indigo-600 px-2 py-0.5 rounded-full">나</span>
+                  )}
+                </div>
+                <p className="text-sm text-slate-600 whitespace-pre-wrap">{intro.content}</p>
+                {intro.tags?.length > 0 && (
+                  <div className="flex flex-wrap gap-1 mt-2">
+                    {intro.tags.map((tag, i) => (
+                      <span key={i} className="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
