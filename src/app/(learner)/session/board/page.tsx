@@ -2,10 +2,19 @@
 import { useState } from 'react';
 import { collection, addDoc, serverTimestamp, doc, updateDoc, increment, arrayUnion, arrayRemove } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
+import { MessageSquare } from 'lucide-react';
 import { useSessionStore } from '@/hooks/useSession';
 import { usePosts } from '@/hooks/usePosts';
-import type { Post } from '@/types/board';
+import PostCard from '@/components/board/PostCard';
+import Tabs from '@/components/ui/tabs';
+import { SkeletonList } from '@/components/ui/skeleton';
+import EmptyState from '@/components/ui/empty-state';
 import Masonry from 'react-masonry-css';
+
+const SORT_TABS = [
+  { id: 'newest', label: '최신순' },
+  { id: 'popular', label: '인기순' },
+];
 
 export default function BoardPage() {
   const { courseId, sessionId, participantId, participantName } = useSessionStore();
@@ -41,9 +50,11 @@ export default function BoardPage() {
     setPosting(false);
   };
 
-  const handleLike = async (post: Post) => {
+  const handleLike = async (postId: string) => {
     if (!basePath) return;
-    const postRef = doc(db, basePath, post.id);
+    const post = posts.find((p) => p.id === postId);
+    if (!post) return;
+    const postRef = doc(db, basePath, postId);
     const isLiked = post.likedBy?.includes(participantId);
     try {
       await updateDoc(postRef, {
@@ -58,17 +69,12 @@ export default function BoardPage() {
   return (
     <div className="space-y-4 animate-fade-in">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-bold text-slate-900">📋 게시판</h2>
-        <div className="flex gap-1 bg-slate-100 rounded-lg p-0.5">
-          <button
-            onClick={() => setSortBy('newest')}
-            className={`px-3 py-1 text-xs rounded-md transition ${sortBy === 'newest' ? 'bg-white shadow text-slate-900 font-semibold' : 'text-slate-500'}`}
-          >최신순</button>
-          <button
-            onClick={() => setSortBy('popular')}
-            className={`px-3 py-1 text-xs rounded-md transition ${sortBy === 'popular' ? 'bg-white shadow text-slate-900 font-semibold' : 'text-slate-500'}`}
-          >인기순</button>
-        </div>
+        <h2 className="text-lg font-bold text-slate-900">게시판</h2>
+        <Tabs
+          tabs={SORT_TABS}
+          activeTab={sortBy}
+          onTabChange={(id) => setSortBy(id as 'newest' | 'popular')}
+        />
       </div>
 
       {showForm ? (
@@ -107,42 +113,28 @@ export default function BoardPage() {
       )}
 
       {loading ? (
-        <div className="text-center py-8 text-slate-400">로딩 중...</div>
+        <SkeletonList count={3} />
       ) : posts.length === 0 ? (
-        <div className="text-center py-8 text-slate-400">
-          <div className="text-3xl mb-2">📝</div>
-          <p className="text-sm">아직 게시글이 없습니다</p>
-        </div>
+        <EmptyState
+          icon={MessageSquare}
+          title="아직 게시글이 없습니다"
+          description="첫 번째 글을 작성해보세요!"
+        />
       ) : (
         <Masonry
           breakpointCols={{ default: 2, 480: 1 }}
           className="masonry-grid"
           columnClassName="masonry-grid_column"
         >
-          {posts.map((post) => {
-            const isLiked = post.likedBy?.includes(participantId);
-            return (
-              <div key={post.id} className="bg-white rounded-xl p-4 shadow-sm border border-slate-200 mb-3 animate-fade-in">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-7 h-7 bg-indigo-100 rounded-full flex items-center justify-center text-xs font-bold text-indigo-600">
-                    {post.authorName[0]}
-                  </div>
-                  <span className="text-xs font-medium text-slate-700">{post.authorName}</span>
-                  {post.authorId === participantId && (
-                    <span className="text-xs text-indigo-500">(나)</span>
-                  )}
-                </div>
-                <p className="text-sm text-slate-700 whitespace-pre-wrap mb-3">{post.content}</p>
-                <button
-                  onClick={() => handleLike(post)}
-                  className={`flex items-center gap-1 text-xs transition ${isLiked ? 'text-red-500' : 'text-slate-400 hover:text-red-400'}`}
-                >
-                  <span>{isLiked ? '❤️' : '🤍'}</span>
-                  <span>{post.likeCount || 0}</span>
-                </button>
-              </div>
-            );
-          })}
+          {posts.map((post) => (
+            <div key={post.id} className="mb-3">
+              <PostCard
+                post={post}
+                currentUserId={participantId}
+                onToggleLike={handleLike}
+              />
+            </div>
+          ))}
         </Masonry>
       )}
     </div>

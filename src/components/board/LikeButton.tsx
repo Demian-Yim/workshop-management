@@ -1,5 +1,7 @@
 'use client';
 
+import { Heart } from 'lucide-react';
+
 interface LikeButtonProps {
   count: number;
   isLiked: boolean;
@@ -19,7 +21,9 @@ export default function LikeButton({ count, isLiked, onClick, dark }: LikeButton
           : 'text-slate-400 hover:text-red-500'
       }`}
     >
-      <span>{isLiked ? '❤️' : '🤍'}</span>
+      <Heart
+        className={`w-4 h-4 transition-transform ${isLiked ? 'fill-current animate-heart-bounce' : ''}`}
+      />
       <span>{count > 0 ? count : ''}</span>
     </button>
   );

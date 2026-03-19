@@ -1,15 +1,24 @@
 'use client';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
+import { LayoutDashboard, BookOpen, Users, BarChart3 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { signOut } from '@/lib/firebase/auth';
 import { useRouter } from 'next/navigation';
+import { Skeleton } from '@/components/ui/skeleton';
 
-const navItems = [
-  { href: '/dashboard', label: '대시보드', icon: '📊' },
-  { href: '/dashboard/courses', label: '교육과정', icon: '📚' },
-  { href: '/dashboard/facilitators', label: '강사 관리', icon: '👨‍🏫' },
-  { href: '/dashboard/reports', label: '리포트', icon: '📈' },
+interface NavItem {
+  href: string;
+  label: string;
+  icon: LucideIcon;
+}
+
+const navItems: NavItem[] = [
+  { href: '/dashboard', label: '대시보드', icon: LayoutDashboard },
+  { href: '/dashboard/courses', label: '교육과정', icon: BookOpen },
+  { href: '/dashboard/facilitators', label: '강사 관리', icon: Users },
+  { href: '/dashboard/reports', label: '리포트', icon: BarChart3 },
 ];
 
 export default function AdminDashboardLayout({ children }: { children: React.ReactNode }) {
@@ -17,7 +26,15 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
   const { user, loading } = useAuth();
   const router = useRouter();
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center">로딩 중...</div>;
+  if (loading) return (
+    <div className="min-h-screen flex items-center justify-center bg-slate-50">
+      <div className="w-60 space-y-4 p-6">
+        <Skeleton className="h-6 w-32" />
+        <Skeleton className="h-4 w-48" />
+        <Skeleton className="h-4 w-40" />
+      </div>
+    </div>
+  );
   if (!user) { router.push('/login'); return null; }
 
   const handleSignOut = async () => {
@@ -45,7 +62,7 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
                     : 'text-slate-600 hover:bg-slate-50'
                 }`}
               >
-                <span>{item.icon}</span>
+                <item.icon className="w-4 h-4" />
                 <span>{item.label}</span>
               </Link>
             );

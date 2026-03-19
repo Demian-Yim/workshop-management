@@ -1,17 +1,25 @@
 'use client';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { Home, MessageSquare, UtensilsCrossed, Bell, BarChart3 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { useSessionStore, useSessionHydrated } from '@/hooks/useSession';
 import { useRealtimeDocument } from '@/hooks/useRealtimeDocument';
 import type { Session } from '@/types/session';
 import { useEffect } from 'react';
 
-const navItems = [
-  { href: '/session', label: '홈', icon: '🏠' },
-  { href: '/session/board', label: '게시판', icon: '📋' },
-  { href: '/session/lunch', label: '점심', icon: '🍱' },
-  { href: '/session/announcements', label: '공지', icon: '📢' },
-  { href: '/session/survey', label: '설문', icon: '📊' },
+interface NavItem {
+  href: string;
+  label: string;
+  icon: LucideIcon;
+}
+
+const navItems: NavItem[] = [
+  { href: '/session', label: '홈', icon: Home },
+  { href: '/session/board', label: '게시판', icon: MessageSquare },
+  { href: '/session/lunch', label: '점심', icon: UtensilsCrossed },
+  { href: '/session/announcements', label: '공지', icon: Bell },
+  { href: '/session/survey', label: '설문', icon: BarChart3 },
 ];
 
 export default function LearnerSessionLayout({ children }: { children: React.ReactNode }) {
@@ -68,19 +76,22 @@ export default function LearnerSessionLayout({ children }: { children: React.Rea
 
       <main className="max-w-lg mx-auto p-4">{children}</main>
 
-      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 z-40">
+      <nav className="fixed bottom-0 left-0 right-0 backdrop-blur-sm bg-white/90 border-t border-slate-200 z-40">
         <div className="flex justify-around max-w-lg mx-auto">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
+            const Icon = item.icon;
             return (
               <Link
                 key={item.href}
                 href={item.href}
                 className={`flex flex-col items-center py-2 px-3 text-xs transition ${
-                  isActive ? 'text-indigo-600' : 'text-slate-400 hover:text-slate-600'
+                  isActive
+                    ? 'text-indigo-600 border-t-2 border-indigo-500'
+                    : 'text-slate-400 hover:text-slate-600 border-t-2 border-transparent'
                 }`}
               >
-                <span className="text-lg mb-0.5">{item.icon}</span>
+                <Icon className="w-5 h-5 mb-0.5" />
                 <span className={isActive ? 'font-semibold' : ''}>{item.label}</span>
               </Link>
             );

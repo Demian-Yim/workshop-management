@@ -1,9 +1,12 @@
 'use client';
 import { useState } from 'react';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { CheckCircle } from 'lucide-react';
 import { db } from '@/lib/firebase/config';
 import { useSessionStore } from '@/hooks/useSession';
 import { useRealtimeDocument } from '@/hooks/useRealtimeDocument';
+import StarRating from '@/components/survey/StarRating';
+import Button from '@/components/ui/button';
 import type { SurveyResponse } from '@/types/survey';
 
 const defaultQuestions = [
@@ -14,6 +17,8 @@ const defaultQuestions = [
   { id: 'q5', text: '전반적 만족도', type: 'rating' as const },
   { id: 'q6', text: '건의사항 및 의견', type: 'text' as const },
 ];
+
+const ratingQuestions = defaultQuestions.filter((q) => q.type === 'rating');
 
 export default function SurveyPage() {
   const { courseId, sessionId, participantId } = useSessionStore();
@@ -35,11 +40,15 @@ export default function SurveyPage() {
     setResponses((prev) => ({ ...prev, [questionId]: value }));
   };
 
+  const answeredCount = ratingQuestions.filter((q) => (responses[q.id] as number) > 0).length;
+  const progress = ratingQuestions.length > 0
+    ? Math.round((answeredCount / ratingQuestions.length) * 100)
+    : 0;
+
   const handleSubmit = async () => {
     if (!basePath || !participantId) return;
     setSaving(true);
     try {
-      const ratingQuestions = defaultQuestions.filter((q) => q.type === 'rating');
       const ratings = ratingQuestions.map((q) => (responses[q.id] as number) || 0);
       const overallRating = ratings.length > 0
         ? Math.round((ratings.reduce((a, b) => a + b, 0) / ratings.length) * 10) / 10
@@ -63,10 +72,14 @@ export default function SurveyPage() {
   if (myResponse) {
     return (
       <div className="text-center py-12 animate-fade-in">
-        <div className="text-5xl mb-4">✅</div>
+        <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4 animate-scale-in">
+          <CheckCircle className="w-8 h-8 text-green-500" />
+        </div>
         <h2 className="text-lg font-bold text-slate-900 mb-2">설문 제출 완료</h2>
         <p className="text-slate-500">소중한 의견 감사합니다!</p>
-        <div className="mt-4 text-2xl">{'⭐'.repeat(Math.round(myResponse.overallRating))}</div>
+        <div className="mt-4 flex justify-center">
+          <StarRating value={Math.round(myResponse.overallRating)} readOnly size="md" />
+        </div>
         <p className="text-sm text-slate-400 mt-1">평균 {myResponse.overallRating}점</p>
       </div>
     );
@@ -75,8 +88,21 @@ export default function SurveyPage() {
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="text-center">
-        <h2 className="text-lg font-bold text-slate-900">📊 만족도 설문</h2>
+        <h2 className="text-lg font-bold text-slate-900">만족도 설문</h2>
         <p className="text-sm text-slate-500 mt-1">각 항목을 평가해 주세요</p>
+      </div>
+
+      <div>
+        <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
+          <span>{answeredCount}/{ratingQuestions.length} 항목 응답</span>
+          <span>{progress}%</span>
+        </div>
+        <div className="w-full bg-slate-100 rounded-full h-2">
+          <div
+            className="bg-indigo-500 h-2 rounded-full transition-all duration-500"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
       </div>
 
       <div className="space-y-4">
@@ -84,17 +110,10 @@ export default function SurveyPage() {
           <div key={q.id} className="bg-white rounded-xl p-4 shadow-sm border border-slate-200">
             <label className="block text-sm font-medium text-slate-700 mb-2">{q.text}</label>
             {q.type === 'rating' ? (
-              <div className="flex gap-1 star-rating">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <button
-                    key={star}
-                    onClick={() => setRating(q.id, star)}
-                    className="text-2xl"
-                  >
-                    {star <= ((responses[q.id] as number) || 0) ? '⭐' : '☆'}
-                  </button>
-                ))}
-              </div>
+              <StarRating
+                value={(responses[q.id] as number) || 0}
+                onChange={(v) => setRating(q.id, v)}
+              />
             ) : (
               <textarea
                 value={(responses[q.id] as string) || ''}
@@ -108,13 +127,14 @@ export default function SurveyPage() {
         ))}
       </div>
 
-      <button
+      <Button
         onClick={handleSubmit}
-        disabled={saving}
-        className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 text-white font-semibold rounded-xl transition text-lg"
+        loading={saving}
+        size="lg"
+        className="w-full"
       >
-        {saving ? '제출 중...' : '설문 제출하기'}
-      </button>
+        설문 제출하기
+      </Button>
     </div>
   );
 }

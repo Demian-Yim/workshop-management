@@ -1,22 +1,40 @@
 'use client';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
+import {
+  LayoutDashboard,
+  CheckCircle,
+  UserPlus,
+  Users,
+  MessageSquare,
+  Megaphone,
+  UtensilsCrossed,
+  PenLine,
+  BarChart3,
+} from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { useSessionStore } from '@/hooks/useSession';
 import { useRealtimeDocument } from '@/hooks/useRealtimeDocument';
 import { useAttendance } from '@/hooks/useAttendance';
 import type { Session } from '@/types/session';
 import { useEffect } from 'react';
 
-const features = [
-  { href: '/present', label: '대시보드', icon: '🏠' },
-  { href: '/present/attendance', label: '출석', icon: '✅' },
-  { href: '/present/intro', label: '자기소개', icon: '👋' },
-  { href: '/present/team', label: '팀 구성', icon: '👥' },
-  { href: '/present/board', label: '게시판', icon: '📋' },
-  { href: '/present/announcements', label: '공지', icon: '📢' },
-  { href: '/present/lunch', label: '점심', icon: '🍱' },
-  { href: '/present/review', label: '후기', icon: '✍️' },
-  { href: '/present/survey', label: '설문', icon: '📊' },
+interface FeatureItem {
+  href: string;
+  label: string;
+  icon: LucideIcon;
+}
+
+const features: FeatureItem[] = [
+  { href: '/present', label: '대시보드', icon: LayoutDashboard },
+  { href: '/present/attendance', label: '출석', icon: CheckCircle },
+  { href: '/present/intro', label: '자기소개', icon: UserPlus },
+  { href: '/present/team', label: '팀 구성', icon: Users },
+  { href: '/present/board', label: '게시판', icon: MessageSquare },
+  { href: '/present/announcements', label: '공지', icon: Megaphone },
+  { href: '/present/lunch', label: '점심', icon: UtensilsCrossed },
+  { href: '/present/review', label: '후기', icon: PenLine },
+  { href: '/present/survey', label: '설문', icon: BarChart3 },
 ];
 
 export default function PresentLayout({ children }: { children: React.ReactNode }) {
@@ -59,7 +77,7 @@ export default function PresentLayout({ children }: { children: React.ReactNode 
                     : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/50'
                 }`}
               >
-                <span>{f.icon}</span>
+                <f.icon className="w-4 h-4" />
                 <span>{f.label}</span>
               </Link>
             );

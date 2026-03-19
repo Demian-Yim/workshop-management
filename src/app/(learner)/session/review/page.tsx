@@ -5,6 +5,8 @@ import { db } from '@/lib/firebase/config';
 import { useSessionStore } from '@/hooks/useSession';
 import { useRealtimeCollection } from '@/hooks/useRealtimeCollection';
 import { useRealtimeDocument } from '@/hooks/useRealtimeDocument';
+import StarRating from '@/components/survey/StarRating';
+import Button from '@/components/ui/button';
 import type { CourseReview } from '@/types/review';
 
 export default function ReviewPage() {
@@ -45,21 +47,14 @@ export default function ReviewPage() {
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-        <h2 className="text-lg font-bold text-slate-900 mb-4">✍️ 강의후기</h2>
+        <h2 className="text-lg font-bold text-slate-900 mb-4">강의후기</h2>
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-2">별점</label>
-            <div className="flex gap-1 star-rating">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <button
-                  key={star}
-                  onClick={() => setRating(star)}
-                  className="text-2xl"
-                >
-                  {star <= (rating || myReview?.rating || 0) ? '⭐' : '☆'}
-                </button>
-              ))}
-            </div>
+            <StarRating
+              value={rating || myReview?.rating || 0}
+              onChange={setRating}
+            />
           </div>
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">후기</label>
@@ -80,13 +75,15 @@ export default function ReviewPage() {
             />
             <span className="text-sm text-slate-600">익명으로 작성</span>
           </label>
-          <button
+          <Button
             onClick={handleSave}
             disabled={saving || !(content.trim() || myReview?.content)}
-            className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 text-white font-semibold rounded-xl transition"
+            loading={saving}
+            size="lg"
+            className="w-full"
           >
-            {saving ? '저장 중...' : myReview ? '수정하기' : '등록하기'}
-          </button>
+            {myReview ? '수정하기' : '등록하기'}
+          </Button>
         </div>
       </div>
 
@@ -98,7 +95,7 @@ export default function ReviewPage() {
               <div key={review.id} className="bg-white rounded-xl p-4 shadow-sm border border-slate-200 animate-fade-in">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-medium text-slate-700">{review.participantName}</span>
-                  <div className="text-sm">{'⭐'.repeat(review.rating)}</div>
+                  <StarRating value={review.rating} readOnly size="sm" />
                 </div>
                 <p className="text-sm text-slate-600 whitespace-pre-wrap">{review.content}</p>
               </div>

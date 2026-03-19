@@ -5,6 +5,9 @@ import { db } from '@/lib/firebase/config';
 import { useSessionStore } from '@/hooks/useSession';
 import { useRealtimeCollection } from '@/hooks/useRealtimeCollection';
 import { useRealtimeDocument } from '@/hooks/useRealtimeDocument';
+import Avatar from '@/components/ui/avatar';
+import Button from '@/components/ui/button';
+import { SkeletonList } from '@/components/ui/skeleton';
 import type { IntroCard } from '@/types/intro';
 
 export default function IntroPage() {
@@ -15,12 +18,12 @@ export default function IntroPage() {
 
   const basePath = courseId && sessionId ? `courses/${courseId}/sessions/${sessionId}` : '';
 
-  const { data: myIntro } = useRealtimeDocument<IntroCard>(
+  const { data: myIntro, loading: myIntroLoading } = useRealtimeDocument<IntroCard>(
     basePath && participantId ? `${basePath}/introCards/${participantId}` : '',
     !!(basePath && participantId)
   );
 
-  const { data: allIntros } = useRealtimeCollection<IntroCard>(
+  const { data: allIntros, loading: allIntrosLoading } = useRealtimeCollection<IntroCard>(
     basePath ? `${basePath}/introCards` : '', [], !!basePath
   );
 
@@ -42,10 +45,14 @@ export default function IntroPage() {
     setSaving(false);
   };
 
+  if (myIntroLoading) {
+    return <SkeletonList count={2} />;
+  }
+
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-        <h2 className="text-lg font-bold text-slate-900 mb-4">👋 자기소개</h2>
+        <h2 className="text-lg font-bold text-slate-900 mb-4">자기소개</h2>
         <div className="space-y-3">
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">소개글</label>
@@ -67,26 +74,34 @@ export default function IntroPage() {
               className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition"
             />
           </div>
-          <button
+          <Button
             onClick={handleSave}
             disabled={saving || !(content.trim() || myIntro?.content)}
-            className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 text-white font-semibold rounded-xl transition"
+            loading={saving}
+            size="lg"
+            className="w-full"
           >
-            {saving ? '저장 중...' : myIntro ? '수정하기' : '등록하기'}
-          </button>
+            {myIntro ? '수정하기' : '등록하기'}
+          </Button>
         </div>
       </div>
 
-      {allIntros.length > 0 && (
+      {allIntrosLoading ? (
+        <SkeletonList count={3} />
+      ) : allIntros.length > 0 ? (
         <div>
           <h3 className="text-sm font-semibold text-slate-500 mb-3">참가자 소개 ({allIntros.length}명)</h3>
           <div className="space-y-3">
             {allIntros.map((intro) => (
               <div key={intro.id} className="bg-white rounded-xl p-4 shadow-sm border border-slate-200 animate-fade-in">
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center text-sm font-bold text-indigo-600">
-                    {intro.participantName[0]}
-                  </div>
+                  {intro.characterUrl ? (
+                    <div className="w-8 h-8 rounded-full overflow-hidden bg-slate-100 flex-shrink-0">
+                      <img src={intro.characterUrl} alt="" className="w-full h-full object-cover" />
+                    </div>
+                  ) : (
+                    <Avatar name={intro.participantName} size="sm" />
+                  )}
                   <span className="font-semibold text-sm text-slate-900">{intro.participantName}</span>
                   {intro.id === participantId && (
                     <span className="text-xs bg-indigo-100 text-indigo-600 px-2 py-0.5 rounded-full">나</span>
@@ -106,7 +121,7 @@ export default function IntroPage() {
             ))}
           </div>
         </div>
-      )}
+      ) : null}
     </div>
   );
 }
