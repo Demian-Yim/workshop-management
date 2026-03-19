@@ -1,8 +1,10 @@
 'use client';
+import { BarChart3, Star } from 'lucide-react';
 import { useSessionStore } from '@/hooks/useSession';
 import { useSurveyResults } from '@/hooks/useSurveyResults';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
+import EmptyState from '@/components/ui/empty-state';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const questionLabels: Record<string, string> = {
@@ -49,7 +51,7 @@ export default function FacilitatorSurveyPage() {
         <div className="flex items-center gap-4">
           {responseCount > 0 && (
             <div className="text-right">
-              <div className="text-2xl font-bold text-yellow-400">⭐ {averageOverall}</div>
+              <div className="text-2xl font-bold text-yellow-400 flex items-center gap-1"><Star className="w-6 h-6 fill-yellow-400 text-yellow-400" />{averageOverall}</div>
               <p className="text-xs text-slate-500">평균 점수</p>
             </div>
           )}
@@ -67,11 +69,12 @@ export default function FacilitatorSurveyPage() {
       </div>
 
       {responseCount === 0 ? (
-        <div className="text-center py-20">
-          <div className="text-6xl mb-4">📊</div>
-          <p className="text-slate-500 text-lg">아직 응답이 없습니다</p>
-          <p className="text-slate-600 text-sm mt-1">설문을 열고 학습자들의 응답을 기다려주세요</p>
-        </div>
+        <EmptyState
+          icon={BarChart3}
+          title="아직 응답이 없습니다"
+          description="설문을 열고 학습자들의 응답을 기다려주세요"
+          dark
+        />
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">

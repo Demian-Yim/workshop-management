@@ -1,6 +1,10 @@
 'use client';
+import { PenLine } from 'lucide-react';
 import { useSessionStore } from '@/hooks/useSession';
 import { useRealtimeCollection } from '@/hooks/useRealtimeCollection';
+import StarRating from '@/components/survey/StarRating';
+import { SkeletonList } from '@/components/ui/skeleton';
+import EmptyState from '@/components/ui/empty-state';
 import type { CourseReview } from '@/types/review';
 import Masonry from 'react-masonry-css';
 
@@ -22,19 +26,16 @@ export default function FacilitatorReviewPage() {
         </div>
         {reviews.length > 0 && (
           <div className="text-right">
-            <div className="text-3xl font-bold text-yellow-400">{'⭐'.repeat(Math.round(avgRating))}</div>
+            <StarRating value={Math.round(avgRating)} readOnly size="sm" />
             <p className="text-sm text-slate-400">평균 {avgRating}점</p>
           </div>
         )}
       </div>
 
       {loading ? (
-        <div className="text-center py-12 text-slate-500">로딩 중...</div>
+        <SkeletonList count={3} dark />
       ) : reviews.length === 0 ? (
-        <div className="text-center py-20">
-          <div className="text-6xl mb-4">✍️</div>
-          <p className="text-slate-500 text-lg">아직 후기가 없습니다</p>
-        </div>
+        <EmptyState icon={PenLine} title="아직 후기가 없습니다" dark />
       ) : (
         <Masonry
           breakpointCols={{ default: 3, 1280: 2, 768: 1 }}
@@ -45,7 +46,7 @@ export default function FacilitatorReviewPage() {
             <div key={review.id} className="bg-slate-800 rounded-xl p-5 border border-slate-700 mb-4 animate-fade-in">
               <div className="flex items-center justify-between mb-3">
                 <span className="font-medium text-slate-300">{review.participantName}</span>
-                <div className="text-sm">{'⭐'.repeat(review.rating)}</div>
+                <StarRating value={review.rating} readOnly size="sm" />
               </div>
               <p className="text-slate-200 whitespace-pre-wrap leading-relaxed">{review.content}</p>
             </div>

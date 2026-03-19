@@ -1,4 +1,5 @@
 'use client';
+import { Skeleton } from '@/components/ui/skeleton';
 import { useRealtimeCollection } from '@/hooks/useRealtimeCollection';
 import type { Course } from '@/types/session';
 import Link from 'next/link';
@@ -34,7 +35,17 @@ export default function AdminDashboardPage() {
           <Link href="/dashboard/courses" className="text-sm text-purple-600 hover:text-purple-700">전체 보기</Link>
         </div>
         {loading ? (
-          <div className="p-8 text-center text-slate-400">로딩 중...</div>
+          <div className="divide-y divide-slate-100">
+            {Array.from({ length: 3 }, (_, i) => (
+              <div key={i} className="flex items-center justify-between px-6 py-4">
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-32" />
+                  <Skeleton className="h-3 w-24" />
+                </div>
+                <Skeleton className="h-6 w-16 rounded-full" />
+              </div>
+            ))}
+          </div>
         ) : courses.length === 0 ? (
           <div className="p-8 text-center text-slate-400">등록된 교육과정이 없습니다</div>
         ) : (

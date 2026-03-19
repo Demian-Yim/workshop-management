@@ -1,8 +1,11 @@
 'use client';
 import { useMemo } from 'react';
+import { Megaphone } from 'lucide-react';
 import { orderBy } from 'firebase/firestore';
 import { useSessionStore } from '@/hooks/useSession';
 import { useRealtimeCollection } from '@/hooks/useRealtimeCollection';
+import { SkeletonList } from '@/components/ui/skeleton';
+import EmptyState from '@/components/ui/empty-state';
 import type { Announcement } from '@/types/announcement';
 
 export default function AnnouncementsPage() {
@@ -11,16 +14,13 @@ export default function AnnouncementsPage() {
   const constraints = useMemo(() => [orderBy('createdAt', 'desc')], []);
   const { data: announcements, loading } = useRealtimeCollection<Announcement>(basePath, constraints, !!basePath);
 
-  if (loading) return <div className="text-center py-12 text-slate-400">로딩 중...</div>;
+  if (loading) return <SkeletonList count={3} />;
 
   return (
     <div className="space-y-4 animate-fade-in">
-      <h2 className="text-lg font-bold text-slate-900">📢 공지사항</h2>
+      <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2"><Megaphone className="w-5 h-5 text-indigo-500" />공지사항</h2>
       {announcements.length === 0 ? (
-        <div className="text-center py-12">
-          <div className="text-5xl mb-4">📢</div>
-          <p className="text-slate-500">아직 공지사항이 없습니다</p>
-        </div>
+        <EmptyState icon={Megaphone} title="아직 공지사항이 없습니다" />
       ) : (
         <div className="space-y-3">
           {announcements.map((ann) => (

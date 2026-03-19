@@ -1,9 +1,12 @@
 'use client';
 import { useState } from 'react';
+import { ClipboardList, Heart } from 'lucide-react';
 import { useSessionStore } from '@/hooks/useSession';
 import { usePosts } from '@/hooks/usePosts';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
+import { SkeletonList } from '@/components/ui/skeleton';
+import EmptyState from '@/components/ui/empty-state';
 import Masonry from 'react-masonry-css';
 
 export default function FacilitatorBoardPage() {
@@ -44,12 +47,9 @@ export default function FacilitatorBoardPage() {
       </div>
 
       {loading ? (
-        <div className="text-center py-12 text-slate-500">로딩 중...</div>
+        <SkeletonList count={4} dark />
       ) : posts.length === 0 ? (
-        <div className="text-center py-20">
-          <div className="text-6xl mb-4">📋</div>
-          <p className="text-slate-500 text-lg">아직 게시글이 없습니다</p>
-        </div>
+        <EmptyState icon={ClipboardList} title="아직 게시글이 없습니다" dark />
       ) : (
         <Masonry
           breakpointCols={{ default: 4, 1280: 3, 1024: 2 }}
@@ -66,7 +66,7 @@ export default function FacilitatorBoardPage() {
               </div>
               <p className="text-slate-200 whitespace-pre-wrap leading-relaxed">{post.content}</p>
               <div className="flex items-center gap-2 mt-3 text-sm text-slate-500">
-                <span>❤️ {post.likeCount || 0}</span>
+                <span className="flex items-center gap-1"><Heart className="w-3.5 h-3.5 text-rose-400" />{post.likeCount || 0}</span>
               </div>
             </div>
           ))}

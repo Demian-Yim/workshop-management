@@ -1,4 +1,9 @@
 'use client';
+import {
+  CheckCircle, ClipboardList, UtensilsCrossed, PenLine,
+  BarChart3, Star, Smartphone, Hand, Users, Megaphone,
+} from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { useSessionStore } from '@/hooks/useSession';
 import { useAttendance } from '@/hooks/useAttendance';
 import { usePosts } from '@/hooks/usePosts';
@@ -19,13 +24,13 @@ export default function PresentDashboard() {
     basePath ? `${basePath}/reviews` : '', [], !!basePath
   );
 
-  const stats = [
-    { label: '출석', value: attendeeCount, icon: '✅', href: '/present/attendance', color: 'from-green-500 to-emerald-600' },
-    { label: '게시글', value: posts.length, icon: '📋', href: '/present/board', color: 'from-blue-500 to-indigo-600' },
-    { label: '점심투표', value: totalVotes, icon: '🍱', href: '/present/lunch', color: 'from-amber-500 to-orange-600' },
-    { label: '후기', value: reviews.length, icon: '✍️', href: '/present/review', color: 'from-pink-500 to-rose-600' },
-    { label: '설문응답', value: responseCount, icon: '📊', href: '/present/survey', color: 'from-purple-500 to-violet-600' },
-    { label: '평균만족도', value: averageOverall ? `${averageOverall}점` : '-', icon: '⭐', href: '/present/survey', color: 'from-yellow-500 to-amber-600' },
+  const stats: { label: string; value: string | number; icon: LucideIcon; href: string; color: string }[] = [
+    { label: '출석', value: attendeeCount, icon: CheckCircle, href: '/present/attendance', color: 'from-green-500 to-emerald-600' },
+    { label: '게시글', value: posts.length, icon: ClipboardList, href: '/present/board', color: 'from-blue-500 to-indigo-600' },
+    { label: '점심투표', value: totalVotes, icon: UtensilsCrossed, href: '/present/lunch', color: 'from-amber-500 to-orange-600' },
+    { label: '후기', value: reviews.length, icon: PenLine, href: '/present/review', color: 'from-pink-500 to-rose-600' },
+    { label: '설문응답', value: responseCount, icon: BarChart3, href: '/present/survey', color: 'from-purple-500 to-violet-600' },
+    { label: '평균만족도', value: averageOverall ? `${averageOverall}점` : '-', icon: Star, href: '/present/survey', color: 'from-yellow-500 to-amber-600' },
   ];
 
   return (
@@ -46,7 +51,7 @@ export default function PresentDashboard() {
             className="group bg-slate-800 rounded-xl p-6 border border-slate-700 hover:border-slate-600 transition"
           >
             <div className="flex items-center justify-between mb-3">
-              <span className="text-2xl">{stat.icon}</span>
+              <stat.icon className="w-6 h-6 text-slate-300" />
               <span className={`text-3xl font-bold bg-gradient-to-r ${stat.color} bg-clip-text text-transparent`}>
                 {stat.value}
               </span>
@@ -59,22 +64,22 @@ export default function PresentDashboard() {
       <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
         <h2 className="text-lg font-semibold text-slate-200 mb-4">빠른 메뉴</h2>
         <div className="grid grid-cols-3 lg:grid-cols-4 gap-3">
-          {[
-            { href: '/present/attendance', label: 'QR 출석', icon: '📱' },
-            { href: '/present/intro', label: '자기소개 보기', icon: '👋' },
-            { href: '/present/team', label: '팀 구성하기', icon: '👥' },
-            { href: '/present/board', label: '게시판 보기', icon: '📋' },
-            { href: '/present/announcements', label: '공지 보내기', icon: '📢' },
-            { href: '/present/lunch', label: '점심투표 열기', icon: '🍱' },
-            { href: '/present/review', label: '후기 보기', icon: '✍️' },
-            { href: '/present/survey', label: '설문 열기', icon: '📊' },
-          ].map((item) => (
+          {([
+            { href: '/present/attendance', label: 'QR 출석', icon: Smartphone },
+            { href: '/present/intro', label: '자기소개 보기', icon: Hand },
+            { href: '/present/team', label: '팀 구성하기', icon: Users },
+            { href: '/present/board', label: '게시판 보기', icon: ClipboardList },
+            { href: '/present/announcements', label: '공지 보내기', icon: Megaphone },
+            { href: '/present/lunch', label: '점심투표 열기', icon: UtensilsCrossed },
+            { href: '/present/review', label: '후기 보기', icon: PenLine },
+            { href: '/present/survey', label: '설문 열기', icon: BarChart3 },
+          ] as { href: string; label: string; icon: LucideIcon }[]).map((item) => (
             <Link
               key={item.href}
               href={item.href}
               className="bg-slate-700/50 hover:bg-slate-700 rounded-lg p-4 text-center transition"
             >
-              <div className="text-2xl mb-2">{item.icon}</div>
+              <div className="mb-2 flex justify-center"><item.icon className="w-6 h-6 text-slate-300" /></div>
               <p className="text-xs text-slate-300">{item.label}</p>
             </Link>
           ))}

@@ -1,18 +1,21 @@
 'use client';
 import { useState } from 'react';
+import { Hand, Users, ClipboardList, PenLine, CheckCircle } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
 import { useSessionStore } from '@/hooks/useSession';
 import { useAttendance } from '@/hooks/useAttendance';
 import { useRealtimeDocument } from '@/hooks/useRealtimeDocument';
+import Button from '@/components/ui/button';
 import type { AttendanceRecord } from '@/types/attendance';
 import Link from 'next/link';
 
-const quickLinks = [
-  { href: '/session/intro', label: '자기소개', icon: '👋', desc: '나를 소개해요' },
-  { href: '/session/team', label: '우리 팀', icon: '👥', desc: '팀 구성 확인' },
-  { href: '/session/board', label: '게시판', icon: '📋', desc: '의견을 나눠요' },
-  { href: '/session/review', label: '강의후기', icon: '✍️', desc: '후기를 남겨요' },
+const quickLinks: { href: string; label: string; icon: LucideIcon; desc: string }[] = [
+  { href: '/session/intro', label: '자기소개', icon: Hand, desc: '나를 소개해요' },
+  { href: '/session/team', label: '우리 팀', icon: Users, desc: '팀 구성 확인' },
+  { href: '/session/board', label: '게시판', icon: ClipboardList, desc: '의견을 나눠요' },
+  { href: '/session/review', label: '강의후기', icon: PenLine, desc: '후기를 남겨요' },
 ];
 
 export default function LearnerHomePage() {
@@ -53,17 +56,21 @@ export default function LearnerHomePage() {
         <div className="p-6">
           {myAttendance ? (
             <div className="text-center">
-              <div className="text-4xl mb-2">✅</div>
+              <div className="inline-flex items-center justify-center w-12 h-12 bg-green-100 rounded-full mb-2 animate-scale-in">
+                <CheckCircle className="w-6 h-6 text-green-500" />
+              </div>
               <p className="font-semibold text-green-600">출석 완료!</p>
             </div>
           ) : isAttendanceOpen ? (
-            <button
+            <Button
               onClick={handleCheckIn}
               disabled={checking}
-              className="w-full py-4 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 text-white font-bold rounded-xl text-lg transition"
+              loading={checking}
+              size="lg"
+              className="w-full"
             >
-              {checking ? '체크 중...' : '출석하기'}
-            </button>
+              출석하기
+            </Button>
           ) : (
             <p className="text-center text-slate-400">출석이 아직 열리지 않았습니다</p>
           )}
@@ -77,7 +84,7 @@ export default function LearnerHomePage() {
             href={link.href}
             className="bg-white rounded-xl p-4 shadow-sm border border-slate-200 hover:border-indigo-300 transition"
           >
-            <div className="text-2xl mb-2">{link.icon}</div>
+            <div className="mb-2"><link.icon className="w-6 h-6 text-indigo-500" /></div>
             <h3 className="font-semibold text-slate-900 text-sm">{link.label}</h3>
             <p className="text-xs text-slate-400 mt-0.5">{link.desc}</p>
           </Link>

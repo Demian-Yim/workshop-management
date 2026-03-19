@@ -1,6 +1,9 @@
 'use client';
+import { Users } from 'lucide-react';
 import { useSessionStore } from '@/hooks/useSession';
 import { useRealtimeCollection } from '@/hooks/useRealtimeCollection';
+import { SkeletonList } from '@/components/ui/skeleton';
+import EmptyState from '@/components/ui/empty-state';
 import type { Team } from '@/types/team';
 import { getTeamColor } from '@/lib/utils';
 
@@ -13,16 +16,16 @@ export default function TeamPage() {
   const myTeam = teams.find((t) => t.memberIds.includes(participantId));
 
   if (loading) {
-    return <div className="text-center py-12 text-slate-400">로딩 중...</div>;
+    return <SkeletonList count={2} />;
   }
 
   if (teams.length === 0) {
     return (
-      <div className="text-center py-12 animate-fade-in">
-        <div className="text-5xl mb-4">👥</div>
-        <h2 className="text-lg font-bold text-slate-900 mb-2">팀 구성 대기</h2>
-        <p className="text-slate-500">강사가 팀을 구성하면 여기에 표시됩니다</p>
-      </div>
+      <EmptyState
+        icon={Users}
+        title="팀 구성 대기"
+        description="강사가 팀을 구성하면 여기에 표시됩니다"
+      />
     );
   }
 

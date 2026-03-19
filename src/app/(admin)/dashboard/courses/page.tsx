@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { Skeleton } from '@/components/ui/skeleton';
 import { collection, addDoc, serverTimestamp, Timestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
 import { useRealtimeCollection } from '@/hooks/useRealtimeCollection';
@@ -82,7 +83,17 @@ export default function CoursesPage() {
 
       <div className="bg-white rounded-xl shadow-sm border border-slate-200">
         {loading ? (
-          <div className="p-8 text-center text-slate-400">로딩 중...</div>
+          <div className="divide-y divide-slate-100">
+            {Array.from({ length: 3 }, (_, i) => (
+              <div key={i} className="flex items-center justify-between px-6 py-4">
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-32" />
+                  <Skeleton className="h-3 w-24" />
+                </div>
+                <Skeleton className="h-6 w-16 rounded-full" />
+              </div>
+            ))}
+          </div>
         ) : courses.length === 0 ? (
           <div className="p-8 text-center text-slate-400">등록된 교육과정이 없습니다</div>
         ) : (
