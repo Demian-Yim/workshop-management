@@ -31,6 +31,7 @@ export interface SessionSettings {
   attendanceOpen: boolean;
   boardOpen: boolean;
   lunchPollOpen: boolean;
+  lunchOrderOpen: boolean;
   reviewOpen: boolean;
   surveyOpen: boolean;
   introOpen: boolean;

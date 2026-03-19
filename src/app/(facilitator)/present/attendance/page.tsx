@@ -94,9 +94,24 @@ export default function FacilitatorAttendancePage() {
               attendees.map((a, i) => (
                 <div key={a.id} className="flex items-center gap-3 bg-slate-700/50 rounded-lg px-4 py-2 animate-fade-in">
                   <span className="text-xs font-medium text-slate-500 w-6">{i + 1}</span>
-                  <div className="w-8 h-8 bg-green-500/20 rounded-full flex items-center justify-center text-sm text-green-300">
-                    ✓
-                  </div>
+                  {a.selfieUrl || a.characterUrl ? (
+                    <div className="flex gap-1 flex-shrink-0">
+                      {a.selfieUrl && (
+                        <div className="w-8 h-8 rounded-full overflow-hidden bg-slate-600">
+                          <img src={a.selfieUrl} alt="" className="w-full h-full object-cover" />
+                        </div>
+                      )}
+                      {a.characterUrl && (
+                        <div className="w-8 h-8 rounded-full overflow-hidden bg-slate-600">
+                          <img src={a.characterUrl} alt="" className="w-full h-full object-cover" />
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="w-8 h-8 bg-green-500/20 rounded-full flex items-center justify-center text-sm text-green-300">
+                      ✓
+                    </div>
+                  )}
                   <span className="text-sm font-medium text-slate-200">{a.participantName}</span>
                   <span className="text-xs text-slate-500 ml-auto">{a.method}</span>
                 </div>

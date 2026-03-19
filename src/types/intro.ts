@@ -5,6 +5,7 @@ export interface IntroCard {
   participantName: string;
   content: string;
   photoUrl: string | null;
+  characterUrl?: string | null;
   tags: string[];
   createdAt: Timestamp;
   updatedAt: Timestamp;

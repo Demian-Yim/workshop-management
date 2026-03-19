@@ -4,5 +4,7 @@ export interface AttendanceRecord {
   id: string;
   participantName: string;
   checkedInAt: Timestamp;
-  method: 'code' | 'qr';
+  method: 'code' | 'qr' | 'photo' | 'button';
+  selfieUrl?: string | null;
+  characterUrl?: string | null;
 }
