@@ -71,25 +71,33 @@ export function useCheckInFlow(): UseCheckInFlowReturn {
     async (dataUrl: string): Promise<string> => {
       if (!basePath || !participantId) throw new Error('세션 정보가 없습니다');
 
-      // Convert data URL to Blob
-      const response = await fetch(dataUrl);
-      const blob = await response.blob();
-
-      const storagePath = `sessions/${sessionId}/selfies/${participantId}.jpg`;
-      const selfieUrl = await uploadImage(storagePath, blob);
-
-      // Update attendance record with selfie URL
-      await setDocument(`${basePath}/attendance/${participantId}`, {
-        selfieUrl,
-      });
-
+      // Advance step immediately with data URL (don't block on Storage upload)
       setState((prev) => ({
         ...prev,
-        selfieUrl,
+        selfieUrl: dataUrl,
         currentStep: 'generating',
       }));
 
-      return selfieUrl;
+      // Background: upload to Storage and update Firestore (non-blocking)
+      (async () => {
+        try {
+          const response = await fetch(dataUrl);
+          const blob = await response.blob();
+          const storagePath = `sessions/${sessionId}/selfies/${participantId}.jpg`;
+          const storageUrl = await uploadImage(storagePath, blob);
+
+          await setDocument(`${basePath}/attendance/${participantId}`, {
+            selfieUrl: storageUrl,
+          });
+
+          setState((prev) => ({ ...prev, selfieUrl: storageUrl }));
+        } catch {
+          // Storage upload failed (e.g., permissions) — keep data URL
+          console.warn('셀카 Storage 업로드 실패, data URL 유지');
+        }
+      })();
+
+      return dataUrl;
     },
     [basePath, sessionId, participantId]
   );
@@ -98,30 +106,41 @@ export function useCheckInFlow(): UseCheckInFlowReturn {
     async (base64: string): Promise<string> => {
       if (!basePath || !participantId) throw new Error('세션 정보가 없습니다');
 
-      // Convert base64 to Blob
-      const byteString = atob(base64);
-      const arrayBuffer = new ArrayBuffer(byteString.length);
-      const uint8Array = new Uint8Array(arrayBuffer);
-      for (let i = 0; i < byteString.length; i++) {
-        uint8Array[i] = byteString.charCodeAt(i);
-      }
-      const blob = new Blob([uint8Array], { type: 'image/png' });
+      // Use base64 data URL for immediate display
+      const dataUrl = `data:image/png;base64,${base64}`;
 
-      const storagePath = `sessions/${sessionId}/characters/${participantId}.png`;
-      const characterUrl = await uploadImage(storagePath, blob);
-
-      // Update attendance record with character URL
-      await setDocument(`${basePath}/attendance/${participantId}`, {
-        characterUrl,
-      });
-
+      // Advance step immediately
       setState((prev) => ({
         ...prev,
-        characterUrl,
+        characterUrl: dataUrl,
         currentStep: 'character',
       }));
 
-      return characterUrl;
+      // Background: upload to Storage and update Firestore (non-blocking)
+      (async () => {
+        try {
+          const byteString = atob(base64);
+          const arrayBuffer = new ArrayBuffer(byteString.length);
+          const uint8Array = new Uint8Array(arrayBuffer);
+          for (let i = 0; i < byteString.length; i++) {
+            uint8Array[i] = byteString.charCodeAt(i);
+          }
+          const blob = new Blob([uint8Array], { type: 'image/png' });
+
+          const storagePath = `sessions/${sessionId}/characters/${participantId}.png`;
+          const storageUrl = await uploadImage(storagePath, blob);
+
+          await setDocument(`${basePath}/attendance/${participantId}`, {
+            characterUrl: storageUrl,
+          });
+
+          setState((prev) => ({ ...prev, characterUrl: storageUrl }));
+        } catch {
+          console.warn('캐릭터 Storage 업로드 실패, data URL 유지');
+        }
+      })();
+
+      return dataUrl;
     },
     [basePath, sessionId, participantId]
   );

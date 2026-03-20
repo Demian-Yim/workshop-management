@@ -15,6 +15,7 @@ export default function SelfieCapture({ onCapture, onSkip, className }: SelfieCa
   const { videoRef, canvasRef, isStreaming, error, startCamera, stopCamera, capturePhoto } = useCamera();
   const [preview, setPreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [confirmError, setConfirmError] = useState<string | null>(null);
 
   useEffect(() => {
     startCamera();
@@ -37,8 +38,11 @@ export default function SelfieCapture({ onCapture, onSkip, className }: SelfieCa
   const handleConfirm = async () => {
     if (!preview) return;
     setUploading(true);
+    setConfirmError(null);
     try {
       await onCapture(preview);
+    } catch (err) {
+      setConfirmError(err instanceof Error ? err.message : '사진 처리 중 오류가 발생했습니다');
     } finally {
       setUploading(false);
     }
@@ -86,6 +90,12 @@ export default function SelfieCapture({ onCapture, onSkip, className }: SelfieCa
         )}
         <canvas ref={canvasRef} className="hidden" />
       </div>
+
+      {confirmError && (
+        <div className="bg-red-50 border border-red-200 rounded-xl p-3 text-center">
+          <p className="text-sm text-red-600">{confirmError}</p>
+        </div>
+      )}
 
       <div className="flex items-center justify-center gap-3">
         {preview ? (
