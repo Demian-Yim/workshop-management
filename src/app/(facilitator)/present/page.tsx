@@ -2,6 +2,7 @@
 import {
   CheckCircle, ClipboardList, UtensilsCrossed, PenLine,
   BarChart3, Star, Smartphone, Hand, Users, Megaphone,
+  Monitor, UserPlus, MessageSquare,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { useSessionStore } from '@/hooks/useSession';
@@ -10,8 +11,21 @@ import { usePosts } from '@/hooks/usePosts';
 import { useSurveyResults } from '@/hooks/useSurveyResults';
 import { useLunchVotes } from '@/hooks/useLunchVotes';
 import { useRealtimeCollection } from '@/hooks/useRealtimeCollection';
+import { doc, updateDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebase/config';
+import { useRealtimeDocument } from '@/hooks/useRealtimeDocument';
+import type { Session } from '@/types/session';
 import type { CourseReview } from '@/types/review';
 import Link from 'next/link';
+
+const DISPLAY_FEATURES: { key: string; label: string; icon: LucideIcon }[] = [
+  { key: 'welcome', label: '환영', icon: Monitor },
+  { key: 'intro', label: '자기소개', icon: UserPlus },
+  { key: 'board', label: '게시판', icon: MessageSquare },
+  { key: 'team', label: '팀 구성', icon: Users },
+  { key: 'review', label: '후기', icon: PenLine },
+  { key: 'attendance', label: '출석', icon: CheckCircle },
+];
 
 export default function PresentDashboard() {
   const { courseId, sessionId, sessionCode, participantName } = useSessionStore();
@@ -20,9 +34,18 @@ export default function PresentDashboard() {
   const { responseCount, averageOverall } = useSurveyResults();
   const { totalVotes } = useLunchVotes();
   const basePath = courseId && sessionId ? `courses/${courseId}/sessions/${sessionId}` : '';
+  const { data: session } = useRealtimeDocument<Session>(basePath, !!basePath);
   const { data: reviews } = useRealtimeCollection<CourseReview>(
     basePath ? `${basePath}/reviews` : '', [], !!basePath
   );
+
+  const activeFeature = session?.activeFeature ?? 'welcome';
+
+  const setActiveFeature = async (feature: string) => {
+    if (!basePath) return;
+    const sessionRef = doc(db, basePath);
+    await updateDoc(sessionRef, { activeFeature: feature });
+  };
 
   const stats: { label: string; value: string | number; icon: LucideIcon; href: string; color: string }[] = [
     { label: '출석', value: attendeeCount, icon: CheckCircle, href: '/present/attendance', color: 'from-green-500 to-emerald-600' },
@@ -83,6 +106,42 @@ export default function PresentDashboard() {
               <p className="text-xs text-slate-300">{item.label}</p>
             </Link>
           ))}
+        </div>
+      </div>
+
+      {/* 프로젝션 제어 */}
+      <div className="bg-slate-800 rounded-xl p-6 border border-slate-700 mt-8">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-slate-200">프로젝션 제어</h2>
+          <a
+            href={`/display?courseId=${courseId}&sessionId=${sessionId}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs text-blue-400 hover:text-blue-300 transition"
+          >
+            프로젝션 화면 열기 &rarr;
+          </a>
+        </div>
+        <div className="grid grid-cols-3 lg:grid-cols-6 gap-3">
+          {DISPLAY_FEATURES.map((f) => {
+            const isActive = activeFeature === f.key;
+            return (
+              <button
+                key={f.key}
+                onClick={() => setActiveFeature(f.key)}
+                className={`rounded-lg p-4 text-center transition border ${
+                  isActive
+                    ? 'bg-blue-600/20 border-blue-500 text-blue-300'
+                    : 'bg-slate-700/50 border-slate-700 text-slate-400 hover:bg-slate-700 hover:text-slate-200'
+                }`}
+              >
+                <div className="mb-2 flex justify-center">
+                  <f.icon className={`w-6 h-6 ${isActive ? 'text-blue-300' : 'text-slate-400'}`} />
+                </div>
+                <p className="text-xs font-medium">{f.label}</p>
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>

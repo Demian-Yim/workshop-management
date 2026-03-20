@@ -19,6 +19,7 @@ export interface Session {
   date: Timestamp;
   dayNumber: number;
   sessionCode: string;
+  facilitatorCode: string;
   title: string;
   status: 'waiting' | 'active' | 'closed';
   activeFeature: string | null;
@@ -49,6 +50,7 @@ export interface Participant {
 export interface SessionCode {
   courseId: string;
   sessionId: string;
+  role: 'learner' | 'facilitator';
   createdAt: Timestamp;
   expiresAt: Timestamp;
 }

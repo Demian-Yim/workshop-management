@@ -2,11 +2,12 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import {
-  doc, updateDoc, deleteDoc, addDoc,
+  doc, updateDoc, deleteDoc, addDoc, setDoc,
   collection, serverTimestamp, Timestamp, onSnapshot,
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
 import { useRealtimeCollection } from '@/hooks/useRealtimeCollection';
+import { generateSessionCode } from '@/lib/session';
 import type { Course, Session } from '@/types/session';
 import { Skeleton } from '@/components/ui/skeleton';
 import { formatDate } from '@/lib/utils';
@@ -27,14 +28,6 @@ function useCourseDoc(courseId: string) {
   }, [courseId]);
 
   return { course, loading };
-}
-
-/* ── 6자리 세션코드 생성 ── */
-function generateSessionCode(): string {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  let code = '';
-  for (let i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
-  return code;
 }
 
 /* ── 상태 라벨 ── */
@@ -69,21 +62,24 @@ export default function CourseDetailPage() {
 
   const sortedSessions = [...sessions].sort((a, b) => a.dayNumber - b.dayNumber);
 
-  /* ── 세션 생성: 세션코드를 자동 발급하고 sessionCodes 컬렉션에도 등록 ── */
+  /* ── 세션 생성: 학습자/강사 코드를 각각 발급하고 sessionCodes에 등록 ── */
   const handleCreateSession = async () => {
     if (!sessionTitle.trim()) return;
     setCreating(true);
     try {
-      const code      = generateSessionCode();
-      const dayNumber = sessions.length + 1;
-      const dateTs    = sessionDate ? Timestamp.fromDate(new Date(sessionDate)) : Timestamp.now();
+      const learnerCode     = generateSessionCode();
+      const facilitatorCode = generateSessionCode();
+      const dayNumber       = sessions.length + 1;
+      const dateTs          = sessionDate ? Timestamp.fromDate(new Date(sessionDate)) : Timestamp.now();
+      const expiresAt       = Timestamp.fromDate(new Date(Date.now() + 30 * 24 * 60 * 60 * 1000));
 
       // 1) sessions 서브컬렉션에 세션 문서 생성
       const sessionRef = await addDoc(collection(db, 'courses', courseId, 'sessions'), {
         courseId,
         date: dateTs,
         dayNumber,
-        sessionCode: code,
+        sessionCode: learnerCode,
+        facilitatorCode,
         title: sessionTitle.trim(),
         status: 'waiting',
         activeFeature: null,
@@ -96,13 +92,17 @@ export default function CourseDetailPage() {
         createdAt: serverTimestamp(),
       });
 
-      // 2) sessionCodes 컬렉션에 코드→세션 매핑 등록 (학습자가 코드로 참여할 때 조회용)
-      await addDoc(collection(db, 'sessionCodes'), {
-        courseId,
-        sessionId: sessionRef.id,
-        createdAt: serverTimestamp(),
-        expiresAt: Timestamp.fromDate(new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)),
-      });
+      // 2) sessionCodes 컬렉션에 코드→세션 매핑 등록 (코드 문자열을 문서 ID로 사용)
+      await Promise.all([
+        setDoc(doc(db, 'sessionCodes', learnerCode), {
+          courseId, sessionId: sessionRef.id, role: 'learner' as const,
+          createdAt: serverTimestamp(), expiresAt,
+        }),
+        setDoc(doc(db, 'sessionCodes', facilitatorCode), {
+          courseId, sessionId: sessionRef.id, role: 'facilitator' as const,
+          createdAt: serverTimestamp(), expiresAt,
+        }),
+      ]);
 
       setSessionTitle('');
       setSessionDate('');
@@ -230,7 +230,7 @@ export default function CourseDetailPage() {
             <button onClick={() => setShowSessionForm(false)} className="px-4 py-2 text-slate-500 text-sm">취소</button>
           </div>
           <p className="text-xs text-slate-400 mt-3">
-            💡 세션을 추가하면 6자리 세션코드가 자동 생성됩니다. 학습자는 이 코드로 참여합니다.
+            💡 세션을 추가하면 학습자용/강사용 6자리 세션코드가 각각 자동 생성됩니다.
           </p>
         </div>
       )}
@@ -262,8 +262,13 @@ export default function CourseDetailPage() {
                       Day {session.dayNumber}: {session.title}
                     </h3>
                     <p className="text-sm text-slate-500">
-                      📅 {formatDate(session.date)} | 🔑 코드:{' '}
+                      📅 {formatDate(session.date)} | 🔑 학습자:{' '}
                       <span className="font-mono font-bold text-blue-600">{session.sessionCode}</span>
+                      {session.facilitatorCode && (
+                        <> | 🔐 강사:{' '}
+                          <span className="font-mono font-bold text-emerald-600">{session.facilitatorCode}</span>
+                        </>
+                      )}
                     </p>
                   </div>
                   <div className="flex items-center gap-3">

@@ -11,6 +11,7 @@ import {
   UtensilsCrossed,
   PenLine,
   BarChart3,
+  Monitor,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { useSessionStore } from '@/hooks/useSession';
@@ -83,8 +84,17 @@ export default function PresentLayout({ children }: { children: React.ReactNode 
             );
           })}
         </nav>
-        <div className="p-4 border-t border-slate-700">
-          <Link href="/" className="text-xs text-slate-500 hover:text-slate-300 transition">
+        <div className="p-4 border-t border-slate-700 space-y-3">
+          <a
+            href={`/display?courseId=${courseId}&sessionId=${sessionId}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 px-3 py-2 bg-blue-600/20 text-blue-300 hover:bg-blue-600/30 rounded-lg text-sm font-medium transition w-full"
+          >
+            <Monitor className="w-4 h-4" />
+            프로젝션 보기
+          </a>
+          <Link href="/" className="text-xs text-slate-500 hover:text-slate-300 transition block">
             홈으로 돌아가기
           </Link>
         </div>
