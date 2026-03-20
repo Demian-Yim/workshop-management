@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { useState } from 'react';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
@@ -51,7 +51,7 @@ export default function IntroPage() {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+      <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
         <h2 className="text-lg font-bold text-slate-900 mb-4">자기소개</h2>
         <div className="space-y-3">
           <div>
@@ -61,7 +61,7 @@ export default function IntroPage() {
               onChange={(e) => setContent(e.target.value)}
               placeholder="안녕하세요! 저는..."
               rows={4}
-              className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition resize-none"
+              className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition resize-none"
             />
           </div>
           <div>
@@ -71,7 +71,7 @@ export default function IntroPage() {
               value={tags || myIntro?.tags?.join(', ') || ''}
               onChange={(e) => setTags(e.target.value)}
               placeholder="개발자, 서울, 커피좋아"
-              className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition"
+              className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
             />
           </div>
           <Button
@@ -104,7 +104,7 @@ export default function IntroPage() {
                   )}
                   <span className="font-semibold text-sm text-slate-900">{intro.participantName}</span>
                   {intro.id === participantId && (
-                    <span className="text-xs bg-indigo-100 text-indigo-600 px-2 py-0.5 rounded-full">나</span>
+                    <span className="text-xs bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full">나</span>
                   )}
                 </div>
                 <p className="text-sm text-slate-600 whitespace-pre-wrap">{intro.content}</p>

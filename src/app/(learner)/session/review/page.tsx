@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { useState } from 'react';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
@@ -46,7 +46,7 @@ export default function ReviewPage() {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+      <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
         <h2 className="text-lg font-bold text-slate-900 mb-4">강의후기</h2>
         <div className="space-y-4">
           <div>
@@ -63,7 +63,7 @@ export default function ReviewPage() {
               onChange={(e) => setContent(e.target.value)}
               placeholder="오늘 교육은 어떠셨나요?"
               rows={4}
-              className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition resize-none"
+              className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition resize-none"
             />
           </div>
           <label className="flex items-center gap-2 cursor-pointer">
@@ -71,7 +71,7 @@ export default function ReviewPage() {
               type="checkbox"
               checked={isAnonymous}
               onChange={(e) => setIsAnonymous(e.target.checked)}
-              className="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+              className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
             />
             <span className="text-sm text-slate-600">익명으로 작성</span>
           </label>

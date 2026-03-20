@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useRealtimeCollection } from '@/hooks/useRealtimeCollection';
 import type { Course } from '@/types/session';
@@ -32,7 +32,7 @@ export default function AdminDashboardPage() {
       <div className="bg-white rounded-xl shadow-sm border border-slate-200">
         <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
           <h2 className="font-semibold text-slate-900">최근 교육과정</h2>
-          <Link href="/dashboard/courses" className="text-sm text-purple-600 hover:text-purple-700">전체 보기</Link>
+          <Link href="/dashboard/courses" className="text-sm text-blue-600 hover:text-blue-700">전체 보기</Link>
         </div>
         {loading ? (
           <div className="divide-y divide-slate-100">

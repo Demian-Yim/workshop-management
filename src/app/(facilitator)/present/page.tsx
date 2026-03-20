@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import {
   CheckCircle, ClipboardList, UtensilsCrossed, PenLine,
   BarChart3, Star, Smartphone, Hand, Users, Megaphone,
@@ -26,10 +26,10 @@ export default function PresentDashboard() {
 
   const stats: { label: string; value: string | number; icon: LucideIcon; href: string; color: string }[] = [
     { label: '출석', value: attendeeCount, icon: CheckCircle, href: '/present/attendance', color: 'from-green-500 to-emerald-600' },
-    { label: '게시글', value: posts.length, icon: ClipboardList, href: '/present/board', color: 'from-blue-500 to-indigo-600' },
+    { label: '게시글', value: posts.length, icon: ClipboardList, href: '/present/board', color: 'from-blue-500 to-blue-600' },
     { label: '점심투표', value: totalVotes, icon: UtensilsCrossed, href: '/present/lunch', color: 'from-amber-500 to-orange-600' },
     { label: '후기', value: reviews.length, icon: PenLine, href: '/present/review', color: 'from-pink-500 to-rose-600' },
-    { label: '설문응답', value: responseCount, icon: BarChart3, href: '/present/survey', color: 'from-purple-500 to-violet-600' },
+    { label: '설문응답', value: responseCount, icon: BarChart3, href: '/present/survey', color: 'from-blue-500 to-violet-600' },
     { label: '평균만족도', value: averageOverall ? `${averageOverall}점` : '-', icon: Star, href: '/present/survey', color: 'from-yellow-500 to-amber-600' },
   ];
 
@@ -38,7 +38,7 @@ export default function PresentDashboard() {
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-white mb-2">강사 대시보드</h1>
         <p className="text-slate-400">
-          세션 코드: <span className="text-indigo-300 font-mono font-bold text-xl">{sessionCode}</span>
+          세션 코드: <span className="text-blue-300 font-mono font-bold text-xl">{sessionCode}</span>
           <span className="ml-4">{participantName} 강사</span>
         </p>
       </div>

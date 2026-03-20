@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { useState } from 'react';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { CheckCircle } from 'lucide-react';
@@ -99,7 +99,7 @@ export default function SurveyPage() {
         </div>
         <div className="w-full bg-slate-100 rounded-full h-2">
           <div
-            className="bg-indigo-500 h-2 rounded-full transition-all duration-500"
+            className="bg-blue-500 h-2 rounded-full transition-all duration-500"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -120,7 +120,7 @@ export default function SurveyPage() {
                 onChange={(e) => setText(q.id, e.target.value)}
                 placeholder="자유롭게 작성해 주세요..."
                 rows={3}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:border-indigo-500 outline-none transition resize-none text-sm"
+                className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:border-blue-500 outline-none transition resize-none text-sm"
               />
             )}
           </div>

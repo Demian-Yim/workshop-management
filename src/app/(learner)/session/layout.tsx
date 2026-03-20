@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Home, MessageSquare, UtensilsCrossed, Bell, BarChart3 } from 'lucide-react';
@@ -51,7 +51,7 @@ export default function LearnerSessionLayout({ children }: { children: React.Rea
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
         <div className="text-center">
-          <div className="w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+          <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
           <p className="text-sm text-slate-500">로딩 중...</p>
         </div>
       </div>
@@ -68,7 +68,7 @@ export default function LearnerSessionLayout({ children }: { children: React.Rea
             <h1 className="font-bold text-slate-900 text-sm">{session?.title || '워크샵'}</h1>
             <p className="text-xs text-slate-500">{participantName}</p>
           </div>
-          <span className="text-xs bg-indigo-100 text-indigo-700 px-2 py-1 rounded-full font-medium">
+          <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full font-medium">
             {session?.sessionCode || sessionCode || '----'}
           </span>
         </div>
@@ -87,7 +87,7 @@ export default function LearnerSessionLayout({ children }: { children: React.Rea
                 href={item.href}
                 className={`flex flex-col items-center py-2 px-3 text-xs transition ${
                   isActive
-                    ? 'text-indigo-600 border-t-2 border-indigo-500'
+                    ? 'text-blue-600 border-t-2 border-blue-500'
                     : 'text-slate-400 hover:text-slate-600 border-t-2 border-transparent'
                 }`}
               >

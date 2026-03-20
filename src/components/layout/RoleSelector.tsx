@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import Link from 'next/link';
 import { Card, CardBody } from '@/components/ui/card';
 
@@ -17,7 +17,7 @@ const roles = [
     description: '워크샵 세션을 생성하고 진행하세요',
     icon: '🎤',
     href: '/create',
-    color: 'hover:border-indigo-300 hover:bg-indigo-50',
+    color: 'hover:border-blue-300 hover:bg-blue-50',
   },
   {
     id: 'admin',

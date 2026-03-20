@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { useState } from 'react';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { Vote } from 'lucide-react';
@@ -106,13 +106,13 @@ export default function LunchPage() {
                       onClick={() => poll.isOpen && handleVote(option.id)}
                       disabled={!poll.isOpen}
                       className={`w-full text-left bg-white rounded-xl p-4 shadow-sm border-2 transition ${
-                        isSelected ? 'border-indigo-500 bg-indigo-50' : 'border-slate-200 hover:border-indigo-300'
+                        isSelected ? 'border-blue-500 bg-blue-50' : 'border-slate-200 hover:border-blue-300'
                       } ${!poll.isOpen ? 'cursor-default' : ''}`}
                     >
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2">
                           <span className="font-semibold text-slate-900">{option.name}</span>
-                          {isSelected && <span className="text-xs bg-indigo-100 text-indigo-600 px-2 py-0.5 rounded-full">선택됨</span>}
+                          {isSelected && <span className="text-xs bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full">선택됨</span>}
                         </div>
                         <span className="text-sm font-medium text-slate-500">{count}표 ({percentage}%)</span>
                       </div>
@@ -121,7 +121,7 @@ export default function LunchPage() {
                       )}
                       <div className="w-full bg-slate-100 rounded-full h-2">
                         <div
-                          className="bg-indigo-500 h-2 rounded-full transition-all duration-500"
+                          className="bg-blue-500 h-2 rounded-full transition-all duration-500"
                           style={{ width: `${percentage}%` }}
                         />
                       </div>
@@ -168,7 +168,7 @@ export default function LunchPage() {
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => setSelectedRestaurantId(null)}
-                      className="text-sm text-indigo-600 hover:text-indigo-700"
+                      className="text-sm text-blue-600 hover:text-blue-700"
                     >
                       ← 식당 목록
                     </button>

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { useState } from 'react';
 import Button from '@/components/ui/button';
 import StarRating from '@/components/survey/StarRating';
@@ -46,7 +46,7 @@ export default function ReviewForm({ onSubmit, isSubmitted }: ReviewFormProps) {
           value={content}
           onChange={(e) => setContent(e.target.value)}
           placeholder="강의에 대한 후기를 남겨주세요..."
-          className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 resize-none"
+          className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 resize-none"
           rows={4}
         />
       </div>
@@ -55,7 +55,7 @@ export default function ReviewForm({ onSubmit, isSubmitted }: ReviewFormProps) {
           type="checkbox"
           checked={isAnonymous}
           onChange={(e) => setIsAnonymous(e.target.checked)}
-          className="accent-indigo-500"
+          className="accent-blue-500"
         />
         익명으로 작성
       </label>

@@ -10,7 +10,7 @@ export function Card({ className, hoverable, children, ...props }: CardProps) {
   return (
     <div
       className={cn(
-        'bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden',
+        'bg-white rounded-xl shadow-[var(--shadow-card)] border border-slate-200 overflow-hidden',
         hoverable && 'hover:shadow-md hover:border-slate-300 transition-all duration-200',
         className
       )}

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { useState } from 'react';
 import { Hand, Users, ClipboardList, PenLine, CheckCircle } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
@@ -48,10 +48,10 @@ export default function LearnerHomePage() {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-        <div className="bg-gradient-to-r from-indigo-500 to-purple-600 p-6 text-white">
+      <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+        <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-6 text-white">
           <h2 className="text-lg font-bold mb-1">출석 체크</h2>
-          <p className="text-indigo-100 text-sm">현재 {attendeeCount}명 출석</p>
+          <p className="text-blue-100 text-sm">현재 {attendeeCount}명 출석</p>
         </div>
         <div className="p-6">
           {myAttendance ? (
@@ -82,9 +82,9 @@ export default function LearnerHomePage() {
           <Link
             key={link.href}
             href={link.href}
-            className="bg-white rounded-xl p-4 shadow-sm border border-slate-200 hover:border-indigo-300 transition"
+            className="bg-white rounded-xl p-4 shadow-sm border border-slate-200 hover:border-blue-300 transition"
           >
-            <div className="mb-2"><link.icon className="w-6 h-6 text-indigo-500" /></div>
+            <div className="mb-2"><link.icon className="w-6 h-6 text-blue-500" /></div>
             <h3 className="font-semibold text-slate-900 text-sm">{link.label}</h3>
             <p className="text-xs text-slate-400 mt-0.5">{link.desc}</p>
           </Link>

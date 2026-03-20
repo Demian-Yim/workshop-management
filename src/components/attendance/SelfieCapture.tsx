@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
@@ -62,7 +62,7 @@ export default function SelfieCapture({ onCapture, onSkip, className }: SelfieCa
         </div>
       )}
 
-      <div className="relative mx-auto w-64 h-64 rounded-2xl overflow-hidden bg-slate-100">
+      <div className="relative mx-auto w-64 h-64 rounded-xl overflow-hidden bg-slate-100">
         {preview ? (
           <img src={preview} alt="셀카 미리보기" className="w-full h-full object-cover" />
         ) : (

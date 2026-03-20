@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import Avatar from '@/components/ui/avatar';
 import type { IntroCard as IntroCardType } from '@/types/intro';
 
@@ -24,7 +24,7 @@ export default function IntroCard({ intro, dark }: IntroCardProps) {
           {intro.tags.map((tag) => (
             <span
               key={tag}
-              className={`px-2 py-0.5 rounded-full text-xs ${dark ? 'bg-slate-700 text-slate-300' : 'bg-indigo-50 text-indigo-600'}`}
+              className={`px-2 py-0.5 rounded-full text-xs ${dark ? 'bg-slate-700 text-slate-300' : 'bg-blue-50 text-blue-600'}`}
             >
               #{tag}
             </span>

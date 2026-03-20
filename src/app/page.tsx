@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import Link from 'next/link';
 
 const roles = [
@@ -8,7 +8,7 @@ const roles = [
     description: '세션 코드를 입력하고 워크샵에 참여하세요',
     href: '/join',
     icon: '🎓',
-    color: 'from-blue-500 to-indigo-600',
+    color: 'from-blue-500 to-blue-600',
   },
   {
     title: '강사',
@@ -24,7 +24,7 @@ const roles = [
     description: '교육과정, 강사, 리포트를 관리하세요',
     href: '/login',
     icon: '⚙️',
-    color: 'from-purple-500 to-violet-600',
+    color: 'from-blue-500 to-violet-600',
   },
 ];
 
@@ -40,13 +40,13 @@ export default function HomePage() {
           <Link
             key={role.title}
             href={role.href}
-            className="group relative overflow-hidden rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+            className="group relative overflow-hidden rounded-xl bg-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
           >
             <div className={`h-2 bg-gradient-to-r ${role.color}`} />
             <div className="p-8 text-center">
               <div className="text-5xl mb-4">{role.icon}</div>
               <h2 className="text-2xl font-bold text-slate-900 mb-1">{role.title}</h2>
-              <p className="text-sm font-medium text-indigo-600 mb-3">{role.subtitle}</p>
+              <p className="text-sm font-medium text-blue-600 mb-3">{role.subtitle}</p>
               <p className="text-sm text-slate-500">{role.description}</p>
             </div>
           </Link>

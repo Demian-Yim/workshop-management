@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { useState } from 'react';
 import Button from '@/components/ui/button';
 
@@ -28,7 +28,7 @@ export default function PostForm({ onSubmit }: PostFormProps) {
         value={content}
         onChange={(e) => setContent(e.target.value)}
         placeholder="생각을 공유해주세요..."
-        className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none text-sm"
+        className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-sm"
         rows={3}
         maxLength={1000}
       />

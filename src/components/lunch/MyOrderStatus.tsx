@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { cn } from '@/lib/utils';
 import { Card, CardBody, CardHeader } from '@/components/ui/card';
@@ -38,7 +38,7 @@ export default function MyOrderStatus({ order, onEdit, className }: MyOrderStatu
           {order.items.map((item) => (
             <li key={item.menuItemId} className="flex items-center justify-between text-sm">
               <span className="text-slate-700">{item.menuItemName}</span>
-              <span className="text-indigo-600 font-medium">{item.quantity}개</span>
+              <span className="text-blue-600 font-medium">{item.quantity}개</span>
             </li>
           ))}
         </ul>

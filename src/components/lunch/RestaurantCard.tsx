@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { cn } from '@/lib/utils';
 import { Card, CardBody } from '@/components/ui/card';
@@ -31,7 +31,7 @@ export default function RestaurantCard({
     <Card
       hoverable
       className={cn(
-        selected && 'ring-2 ring-indigo-500 border-indigo-300',
+        selected && 'ring-2 ring-blue-500 border-blue-300',
         className
       )}
       onClick={onSelect}

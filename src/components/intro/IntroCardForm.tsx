@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { useState } from 'react';
 import Button from '@/components/ui/button';
 import Input from '@/components/ui/input';
@@ -52,7 +52,7 @@ export default function IntroCardForm({ onSubmit, isSubmitted }: IntroCardFormPr
           value={content}
           onChange={(e) => setContent(e.target.value)}
           placeholder="간단한 자기소개를 작성해주세요..."
-          className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
+          className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
           rows={4}
           maxLength={500}
         />
@@ -71,7 +71,7 @@ export default function IntroCardForm({ onSubmit, isSubmitted }: IntroCardFormPr
         {tags.length > 0 && (
           <div className="flex flex-wrap gap-1.5 mt-2">
             {tags.map((t) => (
-              <span key={t} className="inline-flex items-center gap-1 px-2 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs">
+              <span key={t} className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs">
                 #{t}
                 <button type="button" onClick={() => removeTag(t)} className="hover:text-red-500">&times;</button>
               </span>

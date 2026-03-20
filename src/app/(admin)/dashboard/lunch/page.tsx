@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useRestaurants } from '@/hooks/useRestaurants';
 import { useMenuOrders } from '@/hooks/useMenuOrders';
@@ -26,7 +26,7 @@ export default function AdminLunchPage() {
         </div>
         <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-200">
           <p className="text-sm text-slate-500">총 주문</p>
-          <p className="text-3xl font-bold text-indigo-600 mt-1">{orders.length}건</p>
+          <p className="text-3xl font-bold text-blue-600 mt-1">{orders.length}건</p>
         </div>
         <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-200">
           <div className="flex items-center justify-between">

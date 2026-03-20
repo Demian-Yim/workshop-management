@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { LayoutDashboard, BookOpen, Users, BarChart3 } from 'lucide-react';
@@ -58,7 +58,7 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
                 href={item.href}
                 className={`flex items-center gap-3 px-5 py-2.5 text-sm transition ${
                   isActive
-                    ? 'bg-purple-50 text-purple-700 font-semibold border-r-2 border-purple-600'
+                    ? 'bg-blue-50 text-blue-700 font-semibold border-r-2 border-blue-600'
                     : 'text-slate-600 hover:bg-slate-50'
                 }`}
               >

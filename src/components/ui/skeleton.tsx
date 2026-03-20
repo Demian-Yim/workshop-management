@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { cn } from '@/lib/utils';
 
@@ -28,7 +28,7 @@ interface SkeletonCardProps {
 export function SkeletonCard({ dark }: SkeletonCardProps) {
   return (
     <div className={cn(
-      'rounded-2xl shadow-sm border p-4 space-y-3',
+      'rounded-xl shadow-sm border p-4 space-y-3',
       dark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'
     )}>
       <div className="flex items-center gap-3">

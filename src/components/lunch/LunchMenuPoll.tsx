@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import type { LunchMenuOption } from '@/types/lunch';
 
 interface LunchMenuPollProps {
@@ -29,7 +29,7 @@ export default function LunchMenuPoll({
             onClick={() => onVote(opt.id)}
             className={`w-full text-left p-4 rounded-xl border-2 transition-all ${
               isSelected
-                ? 'border-indigo-500 bg-indigo-50'
+                ? 'border-blue-500 bg-blue-50'
                 : 'border-slate-200 bg-white hover:border-slate-300'
             }`}
           >
@@ -43,7 +43,7 @@ export default function LunchMenuPoll({
             <div className="w-full bg-slate-100 rounded-full h-2">
               <div
                 className={`h-2 rounded-full transition-all duration-500 ${
-                  isSelected ? 'bg-indigo-500' : 'bg-slate-300'
+                  isSelected ? 'bg-blue-500' : 'bg-slate-300'
                 }`}
                 style={{ width: `${percentage}%` }}
               />

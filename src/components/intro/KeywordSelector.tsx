@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { cn } from '@/lib/utils';
 import { KEYWORD_CATEGORIES, type KeywordCategory } from '@/types/character';
@@ -32,7 +32,7 @@ export default function KeywordSelector({
         <h3 className="text-lg font-bold text-slate-900">나를 표현하는 키워드</h3>
         <p className="text-sm text-slate-500 mt-1">
           최대 {maxKeywords}개까지 선택할 수 있습니다
-          <span className="ml-2 text-indigo-600 font-medium">
+          <span className="ml-2 text-blue-600 font-medium">
             {selectedKeywords.length}/{maxKeywords}
           </span>
         </p>
@@ -56,7 +56,7 @@ export default function KeywordSelector({
                   className={cn(
                     'px-3 py-1.5 rounded-full text-sm font-medium transition-all',
                     isSelected
-                      ? 'bg-indigo-500 text-white shadow-sm'
+                      ? 'bg-blue-500 text-white shadow-sm'
                       : 'bg-slate-100 text-slate-600 hover:bg-slate-200',
                     isDisabled && 'opacity-40 cursor-not-allowed'
                   )}

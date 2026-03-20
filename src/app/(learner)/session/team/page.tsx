@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { Users } from 'lucide-react';
 import { useSessionStore } from '@/hooks/useSession';
 import { useRealtimeCollection } from '@/hooks/useRealtimeCollection';
@@ -32,7 +32,7 @@ export default function TeamPage() {
   return (
     <div className="space-y-6 animate-fade-in">
       {myTeam && (
-        <div className="bg-white rounded-2xl shadow-sm border-2 border-indigo-200 overflow-hidden">
+        <div className="bg-white rounded-xl shadow-sm border-2 border-blue-200 overflow-hidden">
           <div className="p-1" style={{ backgroundColor: getTeamColor(teams.indexOf(myTeam)) }}>
             <div className="bg-white rounded-t-xl" />
           </div>
@@ -48,7 +48,7 @@ export default function TeamPage() {
                 <h2 className="text-xl font-bold text-slate-900">{myTeam.teamName}</h2>
                 <p className="text-sm text-slate-500">{myTeam.memberNames.length}명</p>
               </div>
-              <span className="ml-auto text-xs bg-indigo-100 text-indigo-600 px-2 py-1 rounded-full font-medium">내 팀</span>
+              <span className="ml-auto text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full font-medium">내 팀</span>
             </div>
             <div className="space-y-2">
               {myTeam.memberNames.map((name, i) => (
@@ -58,7 +58,7 @@ export default function TeamPage() {
                   </div>
                   <span className="text-sm font-medium text-slate-700">{name}</span>
                   {myTeam.memberIds[i] === participantId && (
-                    <span className="text-xs text-indigo-500">(나)</span>
+                    <span className="text-xs text-blue-500">(나)</span>
                   )}
                 </div>
               ))}
@@ -73,7 +73,7 @@ export default function TeamPage() {
           <div
             key={team.id}
             className={`bg-white rounded-xl p-4 shadow-sm border ${
-              team.id === myTeam?.id ? 'border-indigo-300' : 'border-slate-200'
+              team.id === myTeam?.id ? 'border-blue-300' : 'border-slate-200'
             }`}
           >
             <div className="flex items-center gap-2 mb-2">

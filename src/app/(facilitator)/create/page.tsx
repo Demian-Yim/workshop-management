@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { collection, addDoc, doc, setDoc, serverTimestamp, Timestamp } from 'firebase/firestore';
@@ -97,7 +97,7 @@ export default function CreateSessionPage() {
           <h1 className="text-2xl font-bold text-slate-900">세션 생성</h1>
           <p className="text-slate-500 mt-1">새로운 워크샵 세션을 만드세요</p>
         </div>
-        <div className="bg-white rounded-2xl shadow-lg p-6 space-y-4">
+        <div className="bg-white rounded-xl shadow-lg p-6 space-y-4">
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">강사 이름</label>
             <input

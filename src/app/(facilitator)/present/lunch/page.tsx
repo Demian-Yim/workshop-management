@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { useState } from 'react';
 import { doc, setDoc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
@@ -138,7 +138,7 @@ export default function FacilitatorLunchPage() {
                 <button
                   onClick={createPoll}
                   disabled={creating || pollOptions.filter((m) => m.name.trim()).length < 2}
-                  className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-600 text-white font-semibold rounded-lg transition"
+                  className="px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-600 text-white font-semibold rounded-lg transition"
                 >
                   {creating ? '생성 중...' : '투표 시작'}
                 </button>
@@ -253,7 +253,7 @@ export default function FacilitatorLunchPage() {
                       onRemove={() => removeRestaurant(restaurant.id)}
                     />
                     {editingMenuFor === restaurant.id && (
-                      <div className="mt-2 pl-4 border-l-2 border-indigo-200">
+                      <div className="mt-2 pl-4 border-l-2 border-blue-200">
                         <MenuEditor
                           menuItems={restaurant.menuItems}
                           onChange={(items) => updateMenuItems(restaurant.id, items)}

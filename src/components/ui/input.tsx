@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { cn } from '@/lib/utils';
 import { InputHTMLAttributes, forwardRef } from 'react';
 
@@ -16,7 +16,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           className={cn(
             'w-full px-4 py-3 border-2 rounded-xl outline-none transition text-sm',
-            error ? 'border-red-300 focus:border-red-500 focus:ring-2 focus:ring-red-200' : 'border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200',
+            error ? 'border-red-300 focus:border-red-500 focus:ring-2 focus:ring-red-200' : 'border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200',
             className
           )}
           {...props}

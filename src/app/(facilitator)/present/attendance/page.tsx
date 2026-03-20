@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { useEffect, useState } from 'react';
 import { useSessionStore } from '@/hooks/useSession';
 import { useAttendance } from '@/hooks/useAttendance';
@@ -61,21 +61,21 @@ export default function FacilitatorAttendancePage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* QR Code */}
-        <div className="bg-slate-800 rounded-2xl p-8 border border-slate-700 text-center">
+        <div className="bg-slate-800 rounded-xl p-8 border border-slate-700 text-center">
           <h2 className="text-lg font-semibold text-slate-200 mb-4">QR 코드로 참여</h2>
           {qrUrl && (
             <div className="bg-white p-4 rounded-xl inline-block mb-4">
               <img src={qrUrl} alt="QR Code" className="w-64 h-64" />
             </div>
           )}
-          <div className="text-6xl font-mono font-bold text-indigo-400 tracking-[0.3em]">
+          <div className="text-6xl font-mono font-bold text-blue-400 tracking-[0.3em]">
             {sessionCode}
           </div>
           <p className="text-sm text-slate-500 mt-2">이 코드를 학습자에게 알려주세요</p>
         </div>
 
         {/* Attendance List */}
-        <div className="bg-slate-800 rounded-2xl p-6 border border-slate-700">
+        <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
           <h2 className="text-lg font-semibold text-slate-200 mb-4">
             출석 현황
             <span className="ml-2 text-sm text-slate-400">({attendeeCount}명)</span>

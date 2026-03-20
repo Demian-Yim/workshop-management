@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { cn } from '@/lib/utils';
 
 interface AvatarProps {
@@ -25,7 +25,7 @@ export default function Avatar({ name, imageUrl, size = 'md', className }: Avata
   return (
     <div
       className={cn(
-        'rounded-full bg-indigo-100 flex items-center justify-center font-bold text-indigo-600',
+        'rounded-full bg-blue-100 flex items-center justify-center font-bold text-blue-600',
         sizes[size],
         className
       )}

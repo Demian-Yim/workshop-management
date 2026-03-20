@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useCallback } from 'react';
 import { cn } from '@/lib/utils';
@@ -87,7 +87,7 @@ export default function AutoIntroGenerator({
       </div>
 
       {/* Character + Intro preview */}
-      <div className="bg-white rounded-2xl border-2 border-slate-200 p-5 space-y-4">
+      <div className="bg-white rounded-xl border-2 border-slate-200 p-5 space-y-4">
         <div className="flex items-start gap-4">
           {characterUrl && (
             <div className="w-16 h-16 rounded-xl overflow-hidden bg-slate-100 flex-shrink-0">
@@ -101,7 +101,7 @@ export default function AutoIntroGenerator({
                 {keywords.map((kw) => (
                   <span
                     key={kw}
-                    className="text-[10px] bg-indigo-100 text-indigo-600 px-1.5 py-0.5 rounded-full"
+                    className="text-[10px] bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded-full"
                   >
                     {kw}
                   </span>
@@ -116,7 +116,7 @@ export default function AutoIntroGenerator({
             value={content}
             onChange={(e) => setContent(e.target.value)}
             rows={5}
-            className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition resize-none"
+            className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition resize-none"
             placeholder="자기소개를 작성해주세요..."
           />
         ) : (

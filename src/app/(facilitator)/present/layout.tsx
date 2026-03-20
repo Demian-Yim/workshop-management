@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -58,7 +58,7 @@ export default function PresentLayout({ children }: { children: React.ReactNode 
         <div className="p-4 border-b border-slate-700">
           <h1 className="font-bold text-sm text-slate-200">{session?.title || '워크샵'}</h1>
           <div className="flex items-center gap-2 mt-2">
-            <span className="text-xs bg-indigo-500/20 text-indigo-300 px-2 py-1 rounded font-mono font-bold text-lg">
+            <span className="text-xs bg-blue-500/20 text-blue-300 px-2 py-1 rounded font-mono font-bold text-lg">
               {sessionCode}
             </span>
           </div>
@@ -73,7 +73,7 @@ export default function PresentLayout({ children }: { children: React.ReactNode 
                 href={f.href}
                 className={`flex items-center gap-3 px-4 py-2.5 text-sm transition ${
                   isActive
-                    ? 'bg-indigo-600/20 text-indigo-300 border-r-2 border-indigo-400'
+                    ? 'bg-blue-600/20 text-blue-300 border-r-2 border-blue-400'
                     : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/50'
                 }`}
               >

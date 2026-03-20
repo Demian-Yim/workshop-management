@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { useState } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { collection, addDoc, serverTimestamp, Timestamp } from 'firebase/firestore';
@@ -45,14 +45,14 @@ export default function CoursesPage() {
         <h1 className="text-2xl font-bold text-slate-900">교육과정 관리</h1>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-lg transition text-sm"
+          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition text-sm"
         >
           + 교육과정 등록
         </button>
       </div>
 
       {showForm && (
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-purple-200 mb-6 animate-slide-up">
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-blue-200 mb-6 animate-slide-up">
           <h2 className="font-semibold text-slate-900 mb-4">새 교육과정</h2>
           <div className="grid grid-cols-2 gap-4">
             <input
@@ -60,21 +60,21 @@ export default function CoursesPage() {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="교육과정명"
-              className="px-4 py-2 border border-slate-200 rounded-lg focus:border-purple-500 outline-none"
+              className="px-4 py-2 border border-slate-200 rounded-lg focus:border-blue-500 outline-none"
             />
             <input
               type="text"
               value={facilitatorName}
               onChange={(e) => setFacilitatorName(e.target.value)}
               placeholder="담당 강사명"
-              className="px-4 py-2 border border-slate-200 rounded-lg focus:border-purple-500 outline-none"
+              className="px-4 py-2 border border-slate-200 rounded-lg focus:border-blue-500 outline-none"
             />
           </div>
           <div className="flex gap-2 mt-4">
             <button
               onClick={handleCreate}
               disabled={creating}
-              className="px-4 py-2 bg-purple-600 text-white rounded-lg text-sm font-medium"
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium"
             >{creating ? '등록 중...' : '등록'}</button>
             <button onClick={() => setShowForm(false)} className="px-4 py-2 text-slate-500 text-sm">취소</button>
           </div>

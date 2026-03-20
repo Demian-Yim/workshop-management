@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { useMemo } from 'react';
 import { Megaphone } from 'lucide-react';
 import { orderBy } from 'firebase/firestore';
@@ -18,7 +18,7 @@ export default function AnnouncementsPage() {
 
   return (
     <div className="space-y-4 animate-fade-in">
-      <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2"><Megaphone className="w-5 h-5 text-indigo-500" />공지사항</h2>
+      <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2"><Megaphone className="w-5 h-5 text-blue-500" />공지사항</h2>
       {announcements.length === 0 ? (
         <EmptyState icon={Megaphone} title="아직 공지사항이 없습니다" />
       ) : (

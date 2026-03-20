@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { useState } from 'react';
 import Button from '@/components/ui/button';
 import Input from '@/components/ui/input';
@@ -41,7 +41,7 @@ export default function AnnouncementForm({ onSubmit }: AnnouncementFormProps) {
           value={content}
           onChange={(e) => setContent(e.target.value)}
           placeholder="공지 내용을 작성하세요..."
-          className="w-full px-4 py-3 border border-slate-600 bg-slate-700 text-white rounded-xl focus:ring-2 focus:ring-indigo-500 resize-none"
+          className="w-full px-4 py-3 border border-slate-600 bg-slate-700 text-white rounded-xl focus:ring-2 focus:ring-blue-500 resize-none"
           rows={3}
         />
       </div>
@@ -51,7 +51,7 @@ export default function AnnouncementForm({ onSubmit }: AnnouncementFormProps) {
             type="radio"
             checked={priority === 'normal'}
             onChange={() => setPriority('normal')}
-            className="accent-indigo-500"
+            className="accent-blue-500"
           />
           일반
         </label>

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { useState } from 'react';
 import Button from '@/components/ui/button';
 import StarRating from './StarRating';
@@ -62,7 +62,7 @@ export default function SurveyForm({ questions, onSubmit, isSubmitted }: SurveyF
               value={responses[q.id]?.text || ''}
               onChange={(e) => updateResponse(q.id, 'text', e.target.value)}
               placeholder="의견을 작성해주세요..."
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 resize-none text-sm"
+              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 resize-none text-sm"
               rows={3}
             />
           )}
@@ -75,7 +75,7 @@ export default function SurveyForm({ questions, onSubmit, isSubmitted }: SurveyF
                     name={q.id}
                     value={opt}
                     onChange={() => updateResponse(q.id, 'text', opt)}
-                    className="accent-indigo-500"
+                    className="accent-blue-500"
                   />
                   {opt}
                 </label>

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { cn } from '@/lib/utils';
 import { Card, CardHeader, CardBody } from '@/components/ui/card';
@@ -54,7 +54,7 @@ export default function OrderSummaryPanel({
                 {summary.items.map((item) => (
                   <tr key={item.menuItemName} className="border-b border-slate-50 last:border-0">
                     <td className="px-4 py-2 text-slate-900">{item.menuItemName}</td>
-                    <td className="px-4 py-2 text-center font-semibold text-indigo-600">
+                    <td className="px-4 py-2 text-center font-semibold text-blue-600">
                       {item.totalQuantity}
                     </td>
                     <td className="px-4 py-2 text-slate-500 text-xs">

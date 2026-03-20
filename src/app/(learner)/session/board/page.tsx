@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { useState } from 'react';
 import { collection, addDoc, serverTimestamp, doc, updateDoc, increment, arrayUnion, arrayRemove } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
@@ -78,20 +78,20 @@ export default function BoardPage() {
       </div>
 
       {showForm ? (
-        <div className="bg-white rounded-xl p-4 shadow-sm border border-indigo-200 animate-slide-up">
+        <div className="bg-white rounded-xl p-4 shadow-sm border border-blue-200 animate-slide-up">
           <textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
             placeholder="의견을 자유롭게 남겨주세요..."
             rows={3}
             autoFocus
-            className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:border-indigo-500 outline-none transition resize-none text-sm"
+            className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:border-blue-500 outline-none transition resize-none text-sm"
           />
           <div className="flex gap-2 mt-2">
             <button
               onClick={handlePost}
               disabled={posting || !content.trim()}
-              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 text-white text-sm font-semibold rounded-lg transition"
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 text-white text-sm font-semibold rounded-lg transition"
             >
               {posting ? '등록 중...' : '등록'}
             </button>
@@ -106,7 +106,7 @@ export default function BoardPage() {
       ) : (
         <button
           onClick={() => setShowForm(true)}
-          className="w-full py-3 border-2 border-dashed border-slate-300 hover:border-indigo-400 rounded-xl text-slate-400 hover:text-indigo-500 text-sm font-medium transition"
+          className="w-full py-3 border-2 border-dashed border-slate-300 hover:border-blue-400 rounded-xl text-slate-400 hover:text-blue-500 text-sm font-medium transition"
         >
           + 새 글 작성하기
         </button>

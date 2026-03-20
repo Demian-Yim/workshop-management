@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { useState } from 'react';
 import { ClipboardList, Heart } from 'lucide-react';
 import { useSessionStore } from '@/hooks/useSession';
@@ -59,7 +59,7 @@ export default function FacilitatorBoardPage() {
           {posts.map((post) => (
             <div key={post.id} className="bg-slate-800 rounded-xl p-5 border border-slate-700 mb-4 animate-fade-in">
               <div className="flex items-center gap-2 mb-3">
-                <div className="w-8 h-8 bg-indigo-500/20 rounded-full flex items-center justify-center text-sm font-bold text-indigo-300">
+                <div className="w-8 h-8 bg-blue-500/20 rounded-full flex items-center justify-center text-sm font-bold text-blue-300">
                   {post.authorName[0]}
                 </div>
                 <span className="text-sm font-medium text-slate-300">{post.authorName}</span>

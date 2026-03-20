@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { cn } from '@/lib/utils';
 import { useEffect, useCallback } from 'react';
 
@@ -34,7 +34,7 @@ export default function Modal({ isOpen, onClose, title, children, size = 'md' }:
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
-      <div className={cn('relative bg-white rounded-2xl shadow-xl w-full animate-slide-up', sizes[size])}>
+      <div className={cn('relative bg-white rounded-xl shadow-xl w-full animate-slide-up', sizes[size])}>
         {title && (
           <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200">
             <h2 className="text-lg font-semibold text-slate-900">{title}</h2>

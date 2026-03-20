@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { useRealtimeCollection } from '@/hooks/useRealtimeCollection';
 import type { Course } from '@/types/session';
 
@@ -31,7 +31,7 @@ export default function FacilitatorsPage() {
             {facilitators.map((f, i) => (
               <div key={i} className="flex items-center justify-between px-6 py-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center text-purple-600 font-bold">
+                  <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold">
                     {f.name[0]}
                   </div>
                   <div>

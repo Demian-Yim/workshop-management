@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { useRealtimeCollection } from '@/hooks/useRealtimeCollection';
 import type { Course } from '@/types/session';
 
@@ -35,7 +35,7 @@ export default function ReportsPage() {
             {courses.map((course) => (
               <div key={course.id} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
                 <span className="text-sm text-slate-700">{course.title}</span>
-                <button className="text-xs text-purple-600 hover:text-purple-700 font-medium">CSV 내보내기</button>
+                <button className="text-xs text-blue-600 hover:text-blue-700 font-medium">CSV 내보내기</button>
               </div>
             ))}
           </div>

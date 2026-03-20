@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
@@ -65,7 +65,7 @@ export default function RestaurantSearch({ onSelect, className }: RestaurantSear
                 </p>
                 <div className="flex items-center gap-2 mt-1">
                   {place.category_name && (
-                    <span className="text-xs text-indigo-600">{place.category_name}</span>
+                    <span className="text-xs text-blue-600">{place.category_name}</span>
                   )}
                   {place.phone && (
                     <span className="text-xs text-slate-400">{place.phone}</span>

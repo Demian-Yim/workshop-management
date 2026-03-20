@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { useState, useMemo } from 'react';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
@@ -53,14 +53,14 @@ export default function FacilitatorAnnouncementsPage() {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="공지 제목"
-              className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-500 outline-none focus:border-indigo-500 transition"
+              className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-500 outline-none focus:border-blue-500 transition"
             />
             <textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
               placeholder="공지 내용을 입력하세요..."
               rows={4}
-              className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-500 outline-none focus:border-indigo-500 transition resize-none"
+              className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-500 outline-none focus:border-blue-500 transition resize-none"
             />
             <div className="flex gap-2">
               <button
@@ -75,7 +75,7 @@ export default function FacilitatorAnnouncementsPage() {
             <button
               onClick={handleSend}
               disabled={sending || !title.trim() || !content.trim()}
-              className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-600 text-white font-semibold rounded-lg transition"
+              className="w-full py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-600 text-white font-semibold rounded-lg transition"
             >
               {sending ? '전송 중...' : '공지 보내기'}
             </button>

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
@@ -56,7 +56,7 @@ export default function CharacterPreview({
             className={cn(
               'px-4 py-2 rounded-xl text-sm font-medium transition-all',
               selectedStyle === style.id
-                ? 'bg-indigo-100 text-indigo-700 ring-2 ring-indigo-500'
+                ? 'bg-blue-100 text-blue-700 ring-2 ring-blue-500'
                 : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
             )}
           >
@@ -87,7 +87,7 @@ export default function CharacterPreview({
           <div className="w-32 h-32 rounded-xl overflow-hidden bg-slate-100 flex items-center justify-center">
             {generating ? (
               <div className="text-center">
-                <div className="animate-spin w-8 h-8 border-3 border-indigo-500 border-t-transparent rounded-full mx-auto" />
+                <div className="animate-spin w-8 h-8 border-3 border-blue-500 border-t-transparent rounded-full mx-auto" />
                 <p className="text-xs text-slate-400 mt-2">생성 중...</p>
               </div>
             ) : characterBase64 ? (

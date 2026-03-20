@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { useSessionStore } from '@/hooks/useSession';
 import Badge from '@/components/ui/badge';
 
@@ -20,7 +20,7 @@ export default function FacilitatorToolbar({
       <div className="flex items-center gap-4">
         <h1 className="text-lg font-bold">{sessionTitle || 'Workshop'}</h1>
         {sessionCode && (
-          <Badge variant="info" className="bg-indigo-600 text-white">
+          <Badge variant="info" className="bg-blue-600 text-white">
             CODE: {sessionCode}
           </Badge>
         )}

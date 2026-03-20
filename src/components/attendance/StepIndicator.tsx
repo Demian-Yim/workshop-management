@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { cn } from '@/lib/utils';
 import type { CheckInFlowStep } from '@/types/character';
@@ -52,8 +52,8 @@ export default function StepIndicator({ currentStep, className }: StepIndicatorP
               <div
                 className={cn(
                   'w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all',
-                  isCompleted && 'bg-indigo-500 text-white',
-                  isCurrent && 'bg-indigo-600 text-white ring-2 ring-indigo-300 ring-offset-1',
+                  isCompleted && 'bg-blue-500 text-white',
+                  isCurrent && 'bg-blue-600 text-white ring-2 ring-blue-300 ring-offset-1',
                   !isCompleted && !isCurrent && 'bg-slate-200 text-slate-400'
                 )}
               >
@@ -68,7 +68,7 @@ export default function StepIndicator({ currentStep, className }: StepIndicatorP
               <span
                 className={cn(
                   'text-[10px] mt-0.5 whitespace-nowrap',
-                  isCurrent ? 'text-indigo-600 font-semibold' : 'text-slate-400'
+                  isCurrent ? 'text-blue-600 font-semibold' : 'text-slate-400'
                 )}
               >
                 {step.label}
@@ -78,7 +78,7 @@ export default function StepIndicator({ currentStep, className }: StepIndicatorP
               <div
                 className={cn(
                   'w-5 h-0.5 mb-4',
-                  isCompleted ? 'bg-indigo-500' : 'bg-slate-200'
+                  isCompleted ? 'bg-blue-500' : 'bg-slate-200'
                 )}
               />
             )}

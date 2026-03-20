@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { useSessionStore } from '@/hooks/useSession';
 import { useRealtimeCollection } from '@/hooks/useRealtimeCollection';
 import type { IntroCard } from '@/types/intro';
@@ -31,14 +31,14 @@ export default function FacilitatorIntroPage() {
           columnClassName="masonry-grid_column"
         >
           {intros.map((intro) => (
-            <div key={intro.id} className="bg-slate-800 rounded-xl p-5 border border-slate-700 mb-4 animate-fade-in hover:border-indigo-500/50 transition">
+            <div key={intro.id} className="bg-slate-800 rounded-xl p-5 border border-slate-700 mb-4 animate-fade-in hover:border-blue-500/50 transition">
               <div className="flex items-center gap-3 mb-3">
                 {intro.characterUrl ? (
                   <div className="w-10 h-10 rounded-full overflow-hidden bg-slate-700 flex-shrink-0">
                     <img src={intro.characterUrl} alt="" className="w-full h-full object-cover" />
                   </div>
                 ) : (
-                  <div className="w-10 h-10 bg-indigo-500/20 rounded-full flex items-center justify-center text-lg font-bold text-indigo-300">
+                  <div className="w-10 h-10 bg-blue-500/20 rounded-full flex items-center justify-center text-lg font-bold text-blue-300">
                     {intro.participantName[0]}
                   </div>
                 )}

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useCallback, useMemo } from 'react';
 import { cn } from '@/lib/utils';
@@ -112,7 +112,7 @@ export default function MenuOrderForm({
           onChange={(e) => setNote(e.target.value)}
           placeholder="알레르기, 특이사항 등..."
           rows={2}
-          className="w-full px-4 py-2 border-2 border-slate-200 rounded-xl text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition resize-none"
+          className="w-full px-4 py-2 border-2 border-slate-200 rounded-xl text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition resize-none"
         />
       </div>
 
@@ -166,13 +166,13 @@ function MenuItemRow({
         >
           -
         </button>
-        <span className={cn('w-6 text-center text-sm font-semibold', quantity > 0 ? 'text-indigo-600' : 'text-slate-300')}>
+        <span className={cn('w-6 text-center text-sm font-semibold', quantity > 0 ? 'text-blue-600' : 'text-slate-300')}>
           {quantity}
         </span>
         <button
           type="button"
           onClick={onIncrease}
-          className="w-7 h-7 rounded-full bg-indigo-100 text-indigo-600 text-sm font-bold hover:bg-indigo-200 transition-colors"
+          className="w-7 h-7 rounded-full bg-blue-100 text-blue-600 text-sm font-bold hover:bg-blue-200 transition-colors"
         >
           +
         </button>
