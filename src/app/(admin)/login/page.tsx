@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { signIn, signUp, resetPassword } from '@/lib/firebase/auth';
+import { signIn, resetPassword } from '@/lib/firebase/auth';
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState('');
@@ -9,7 +9,6 @@ export default function AdminLoginPage() {
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
-  const [mode, setMode] = useState<'login' | 'register'>('login');
   const router = useRouter();
 
   const handleLogin = async () => {
@@ -22,21 +21,6 @@ export default function AdminLoginPage() {
       router.push('/dashboard');
     } catch {
       setError('로그인에 실패했습니다. 이메일과 비밀번호를 확인하세요.');
-    }
-    setLoading(false);
-  };
-
-  const handleRegister = async () => {
-    if (!email || !password) { setError('이메일과 비밀번호를 입력하세요'); return; }
-    if (password.length < 6) { setError('비밀번호는 6자 이상이어야 합니다'); return; }
-    setLoading(true);
-    setError('');
-    setMessage('');
-    try {
-      await signUp(email, password);
-      router.push('/dashboard');
-    } catch {
-      setError('계정 생성에 실패했습니다. 이미 등록된 이메일이거나 비밀번호가 약합니다.');
     }
     setLoading(false);
   };
@@ -55,23 +39,13 @@ export default function AdminLoginPage() {
     setLoading(false);
   };
 
-  const switchMode = () => {
-    setMode(mode === 'login' ? 'register' : 'login');
-    setError('');
-    setMessage('');
-  };
-
   return (
     <div className="min-h-screen flex items-center justify-center p-6 bg-gradient-to-br from-blue-50 to-violet-50">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <div className="text-5xl mb-4">⚙️</div>
-          <h1 className="text-2xl font-bold text-slate-900">
-            {mode === 'login' ? '관리자 로그인' : '관리자 계정 생성'}
-          </h1>
-          <p className="text-slate-500 mt-1">
-            {mode === 'login' ? '교육 관리 시스템에 로그인하세요' : '새 관리자 계정을 만드세요'}
-          </p>
+          <h1 className="text-2xl font-bold text-slate-900">관리자 로그인</h1>
+          <p className="text-slate-500 mt-1">교육 관리 시스템에 로그인하세요</p>
         </div>
         <div className="bg-white rounded-xl shadow-lg p-6 space-y-4">
           <div>
@@ -92,36 +66,24 @@ export default function AdminLoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
               className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
-              onKeyDown={(e) => e.key === 'Enter' && (mode === 'login' ? handleLogin() : handleRegister())}
+              onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
             />
-            {mode === 'register' && (
-              <p className="text-xs text-slate-400 mt-1">6자 이상 입력하세요</p>
-            )}
           </div>
           {error && <p className="text-red-500 text-sm text-center">{error}</p>}
           {message && <p className="text-green-600 text-sm text-center">{message}</p>}
           <button
-            onClick={mode === 'login' ? handleLogin : handleRegister}
+            onClick={handleLogin}
             disabled={loading}
             className="w-full py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 text-white font-semibold rounded-xl transition text-lg"
           >
-            {loading ? '처리 중...' : mode === 'login' ? '로그인' : '계정 생성'}
+            {loading ? '로그인 중...' : '로그인'}
           </button>
-          {mode === 'login' && (
-            <button
-              onClick={handleResetPassword}
-              disabled={loading}
-              className="w-full py-2 text-sm text-blue-600 hover:text-blue-800 disabled:text-slate-400 transition"
-            >
-              비밀번호를 잊으셨나요?
-            </button>
-          )}
           <button
-            onClick={switchMode}
+            onClick={handleResetPassword}
             disabled={loading}
-            className="w-full py-2 text-sm text-slate-500 hover:text-slate-700 disabled:text-slate-400 transition"
+            className="w-full py-2 text-sm text-blue-600 hover:text-blue-800 disabled:text-slate-400 transition"
           >
-            {mode === 'login' ? '계정이 없으신가요? 회원가입' : '이미 계정이 있으신가요? 로그인'}
+            비밀번호를 잊으셨나요?
           </button>
         </div>
       </div>
