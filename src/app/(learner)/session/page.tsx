@@ -1,9 +1,7 @@
 ﻿'use client';
-import { useState } from 'react';
 import { Hand, Users, ClipboardList, PenLine, CheckCircle } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
-import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '@/lib/firebase/config';
+import { useRouter } from 'next/navigation';
 import { useSessionStore } from '@/hooks/useSession';
 import { useAttendance } from '@/hooks/useAttendance';
 import { useRealtimeDocument } from '@/hooks/useRealtimeDocument';
@@ -19,9 +17,9 @@ const quickLinks: { href: string; label: string; icon: LucideIcon; desc: string 
 ];
 
 export default function LearnerHomePage() {
-  const { courseId, sessionId, participantId, participantName, sessionData } = useSessionStore();
+  const { courseId, sessionId, participantId, sessionData } = useSessionStore();
   const { attendeeCount } = useAttendance();
-  const [checking, setChecking] = useState(false);
+  const router = useRouter();
 
   const { data: myAttendance } = useRealtimeDocument<AttendanceRecord>(
     courseId && sessionId && participantId
@@ -29,20 +27,6 @@ export default function LearnerHomePage() {
       : '',
     !!(courseId && sessionId && participantId)
   );
-
-  const handleCheckIn = async () => {
-    if (!courseId || !sessionId || !participantId) return;
-    setChecking(true);
-    try {
-      await setDoc(
-        doc(db, `courses/${courseId}/sessions/${sessionId}/attendance`, participantId),
-        { participantName, checkedInAt: serverTimestamp(), method: 'code' as const }
-      );
-    } catch (err) {
-      console.error(err);
-    }
-    setChecking(false);
-  };
 
   const isAttendanceOpen = sessionData?.settings?.attendanceOpen;
 
@@ -63,9 +47,7 @@ export default function LearnerHomePage() {
             </div>
           ) : isAttendanceOpen ? (
             <Button
-              onClick={handleCheckIn}
-              disabled={checking}
-              loading={checking}
+              onClick={() => router.push('/session/attendance')}
               size="lg"
               className="w-full"
             >
