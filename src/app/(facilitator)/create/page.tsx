@@ -16,6 +16,13 @@ export default function CreateSessionPage() {
   const [creating, setCreating] = useState(false);
   const [error, setError] = useState('');
 
+  const withTimeout = <T,>(promise: Promise<T>, ms: number): Promise<T> => {
+    const timeout = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error('요청 시간이 초과되었습니다. 네트워크를 확인하세요.')), ms)
+    );
+    return Promise.race([promise, timeout]);
+  };
+
   const handleCreate = async () => {
     if (!courseTitle.trim() || !sessionTitle.trim() || !facilitatorName.trim()) {
       setError('모든 필드를 입력하세요');
@@ -29,47 +36,56 @@ export default function CreateSessionPage() {
       const facilitatorId = generateId();
       const sessionCode = generateSessionCode();
 
-      const courseRef = await addDoc(collection(db, 'courses'), {
-        title: courseTitle.trim(),
-        description: '',
-        startDate: Timestamp.now(),
-        endDate: Timestamp.now(),
-        facilitatorId,
-        facilitatorName: facilitatorName.trim(),
-        status: 'active',
-        createdAt: serverTimestamp(),
-        createdBy: facilitatorId,
-      });
-
-      const sessionRef = await addDoc(
-        collection(db, `courses/${courseRef.id}/sessions`),
-        {
-          courseId: courseRef.id,
-          date: Timestamp.now(),
-          dayNumber: 1,
-          sessionCode,
-          title: sessionTitle.trim(),
-          status: 'active',
-          activeFeature: null,
+      const courseRef = await withTimeout(
+        addDoc(collection(db, 'courses'), {
+          title: courseTitle.trim(),
+          description: '',
+          startDate: Timestamp.now(),
+          endDate: Timestamp.now(),
           facilitatorId,
-          settings: {
-            attendanceOpen: true,
-            boardOpen: true,
-            lunchPollOpen: false,
-            reviewOpen: true,
-            surveyOpen: false,
-            introOpen: true,
-          },
+          facilitatorName: facilitatorName.trim(),
+          status: 'active',
           createdAt: serverTimestamp(),
-        }
+          createdBy: facilitatorId,
+        }),
+        15000
       );
 
-      await setDoc(doc(db, 'sessionCodes', sessionCode), {
-        courseId: courseRef.id,
-        sessionId: sessionRef.id,
-        createdAt: serverTimestamp(),
-        expiresAt: Timestamp.fromDate(new Date(Date.now() + 24 * 60 * 60 * 1000)),
-      });
+      const sessionRef = await withTimeout(
+        addDoc(
+          collection(db, `courses/${courseRef.id}/sessions`),
+          {
+            courseId: courseRef.id,
+            date: Timestamp.now(),
+            dayNumber: 1,
+            sessionCode,
+            title: sessionTitle.trim(),
+            status: 'active',
+            activeFeature: null,
+            facilitatorId,
+            settings: {
+              attendanceOpen: true,
+              boardOpen: true,
+              lunchPollOpen: false,
+              reviewOpen: true,
+              surveyOpen: false,
+              introOpen: true,
+            },
+            createdAt: serverTimestamp(),
+          }
+        ),
+        15000
+      );
+
+      await withTimeout(
+        setDoc(doc(db, 'sessionCodes', sessionCode), {
+          courseId: courseRef.id,
+          sessionId: sessionRef.id,
+          createdAt: serverTimestamp(),
+          expiresAt: Timestamp.fromDate(new Date(Date.now() + 24 * 60 * 60 * 1000)),
+        }),
+        15000
+      );
 
       setSession({
         courseId: courseRef.id,
@@ -83,7 +99,8 @@ export default function CreateSessionPage() {
       router.push('/present');
     } catch (err) {
       console.error(err);
-      setError('세션 생성 중 오류가 발생했습니다');
+      const message = err instanceof Error ? err.message : '세션 생성 중 오류가 발생했습니다';
+      setError(message);
     } finally {
       setCreating(false);
     }
