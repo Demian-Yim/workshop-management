@@ -1,5 +1,5 @@
 ﻿'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
 import { useSessionStore } from '@/hooks/useSession';
@@ -15,6 +15,7 @@ export default function IntroPage() {
   const [content, setContent] = useState('');
   const [tags, setTags] = useState('');
   const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
 
   const basePath = courseId && sessionId ? `courses/${courseId}/sessions/${sessionId}` : '';
 
@@ -27,18 +28,30 @@ export default function IntroPage() {
     basePath ? `${basePath}/introCards` : '', [], !!basePath
   );
 
+  // Initialize form fields from existing intro data
+  useEffect(() => {
+    if (myIntro) {
+      setContent((prev) => prev || myIntro.content || '');
+      setTags((prev) => prev || myIntro.tags?.join(', ') || '');
+    }
+  }, [myIntro]);
+
   const handleSave = async () => {
     if (!basePath || !participantId || !content.trim()) return;
     setSaving(true);
+    setSaved(false);
     try {
       await setDoc(doc(db, `${basePath}/introCards`, participantId), {
         participantName,
         content: content.trim(),
-        photoUrl: null,
+        photoUrl: myIntro?.photoUrl || null,
+        characterUrl: myIntro?.characterUrl || null,
         tags: tags.split(',').map((t) => t.trim()).filter(Boolean),
         createdAt: myIntro?.createdAt || serverTimestamp(),
         updatedAt: serverTimestamp(),
       });
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2000);
     } catch (err) {
       console.error(err);
     }
@@ -57,7 +70,7 @@ export default function IntroPage() {
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">소개글</label>
             <textarea
-              value={content || myIntro?.content || ''}
+              value={content}
               onChange={(e) => setContent(e.target.value)}
               placeholder="안녕하세요! 저는..."
               rows={4}
@@ -68,15 +81,20 @@ export default function IntroPage() {
             <label className="block text-sm font-medium text-slate-700 mb-1">태그 (쉼표로 구분)</label>
             <input
               type="text"
-              value={tags || myIntro?.tags?.join(', ') || ''}
+              value={tags}
               onChange={(e) => setTags(e.target.value)}
               placeholder="개발자, 서울, 커피좋아"
               className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
             />
           </div>
+          {saved && (
+            <div className="text-center text-sm text-green-600 font-medium animate-fade-in">
+              저장되었습니다
+            </div>
+          )}
           <Button
             onClick={handleSave}
-            disabled={saving || !(content.trim() || myIntro?.content)}
+            disabled={saving || !content.trim()}
             loading={saving}
             size="lg"
             className="w-full"
