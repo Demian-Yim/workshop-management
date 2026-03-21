@@ -15,7 +15,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       secondary: 'bg-slate-100 hover:bg-slate-200 text-slate-700',
       danger: 'bg-red-600 hover:bg-red-700 text-white',
       ghost: 'hover:bg-slate-100 text-slate-600',
-      admin: 'bg-blue-700 hover:bg-blue-800 text-white shadow-sm',
+      admin: 'bg-purple-600 hover:bg-purple-700 text-white shadow-sm',
     };
     const sizes = {
       sm: 'px-3 py-1.5 text-xs rounded-md',
