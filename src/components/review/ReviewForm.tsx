@@ -46,6 +46,7 @@ export default function ReviewForm({ onSubmit, isSubmitted }: ReviewFormProps) {
           value={content}
           onChange={(e) => setContent(e.target.value)}
           placeholder="강의에 대한 후기를 남겨주세요..."
+          maxLength={1000}
           className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 resize-none"
           rows={4}
         />

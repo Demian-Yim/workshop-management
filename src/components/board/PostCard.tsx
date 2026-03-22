@@ -24,7 +24,7 @@ export default function PostCard({ post, currentUserId, onToggleLike, dark }: Po
           </p>
           {post.createdAt && (
             <p className={`text-xs ${dark ? 'text-slate-500' : 'text-slate-400'}`}>
-              {formatDateTime(post.createdAt as any)}
+              {formatDateTime(post.createdAt)}
             </p>
           )}
         </div>
@@ -33,7 +33,7 @@ export default function PostCard({ post, currentUserId, onToggleLike, dark }: Po
         {post.content}
       </p>
       {post.imageUrl && (
-        <img src={post.imageUrl} alt="" className="rounded-lg w-full mb-3 object-cover max-h-64" />
+        <img src={post.imageUrl} alt="게시글 이미지" className="rounded-lg w-full mb-3 object-cover max-h-64" />
       )}
       <LikeButton
         count={post.likeCount}

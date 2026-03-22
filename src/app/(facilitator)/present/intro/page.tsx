@@ -35,7 +35,7 @@ export default function FacilitatorIntroPage() {
               <div className="flex items-center gap-3 mb-3">
                 {intro.characterUrl ? (
                   <div className="w-10 h-10 rounded-full overflow-hidden bg-slate-700 flex-shrink-0">
-                    <img src={intro.characterUrl} alt="" className="w-full h-full object-cover" />
+                    <img src={intro.characterUrl} alt={`${intro.participantName}의 캐릭터`} className="w-full h-full object-cover" />
                   </div>
                 ) : (
                   <div className="w-10 h-10 bg-blue-500/20 rounded-full flex items-center justify-center text-lg font-bold text-blue-300">

@@ -1,12 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, useCallback } from 'react';
-
-declare global {
-  interface Window {
-    kakao: any;
-  }
-}
+import type { KakaoMap, KakaoMarker } from '@/types/kakao-maps';
 
 interface UseKakaoMapOptions {
   latitude?: number;
@@ -23,7 +18,7 @@ interface MarkerData {
 
 interface UseKakaoMapResult {
   mapRef: React.RefObject<HTMLDivElement | null>;
-  map: any | null;
+  map: KakaoMap | null;
   isLoaded: boolean;
   error: string | null;
   addMarker: (data: MarkerData) => void;
@@ -46,7 +41,7 @@ function loadKakaoSDK(apiKey: string): Promise<void> {
     );
     if (existingScript) {
       existingScript.addEventListener('load', () => {
-        window.kakao.maps.load(() => resolve());
+        window.kakao!.maps.load(() => resolve());
       });
       return;
     }
@@ -55,7 +50,7 @@ function loadKakaoSDK(apiKey: string): Promise<void> {
     script.src = `${KAKAO_SDK_URL}?appkey=${apiKey}&autoload=false`;
     script.async = true;
     script.onload = () => {
-      window.kakao.maps.load(() => resolve());
+      window.kakao!.maps.load(() => resolve());
     };
     script.onerror = () => reject(new Error('카카오맵 SDK 로드 실패'));
     document.head.appendChild(script);
@@ -66,8 +61,8 @@ export function useKakaoMap(options: UseKakaoMapOptions = {}): UseKakaoMapResult
   const { latitude = 37.5665, longitude = 126.978, level = 3 } = options;
 
   const mapRef = useRef<HTMLDivElement | null>(null);
-  const mapInstanceRef = useRef<any>(null);
-  const markersRef = useRef<any[]>([]);
+  const mapInstanceRef = useRef<KakaoMap | null>(null);
+  const markersRef = useRef<KakaoMarker[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -85,10 +80,10 @@ export function useKakaoMap(options: UseKakaoMapOptions = {}): UseKakaoMapResult
         if (cancelled || !mapRef.current) return;
 
         const mapOption = {
-          center: new window.kakao.maps.LatLng(latitude, longitude),
+          center: new window.kakao!.maps.LatLng(latitude, longitude),
           level,
         };
-        const map = new window.kakao.maps.Map(mapRef.current, mapOption);
+        const map = new window.kakao!.maps.Map(mapRef.current, mapOption);
         mapInstanceRef.current = map;
         setIsLoaded(true);
       })

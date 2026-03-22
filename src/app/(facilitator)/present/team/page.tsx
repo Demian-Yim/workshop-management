@@ -8,6 +8,7 @@ import { assignTeams } from '@/lib/team-algorithm';
 import { getTeamColor, generateId } from '@/lib/utils';
 import type { Participant } from '@/types/session';
 import type { Team } from '@/types/team';
+import { toast } from '@/components/ui/toast';
 
 export default function FacilitatorTeamPage() {
   const { courseId, sessionId } = useSessionStore();
@@ -49,6 +50,7 @@ export default function FacilitatorTeamPage() {
       await batch.commit();
     } catch (err) {
       console.error(err);
+      toast.error('팀 배정에 실패했습니다');
     }
     setAssigning(false);
   };

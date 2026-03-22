@@ -62,6 +62,7 @@ export default function SurveyForm({ questions, onSubmit, isSubmitted }: SurveyF
               value={responses[q.id]?.text || ''}
               onChange={(e) => updateResponse(q.id, 'text', e.target.value)}
               placeholder="의견을 작성해주세요..."
+              maxLength={1000}
               className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 resize-none text-sm"
               rows={3}
             />

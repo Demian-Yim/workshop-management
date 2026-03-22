@@ -98,12 +98,12 @@ export default function FacilitatorAttendancePage() {
                     <div className="flex gap-1 flex-shrink-0">
                       {a.selfieUrl && (
                         <div className="w-8 h-8 rounded-full overflow-hidden bg-slate-600">
-                          <img src={a.selfieUrl} alt="" className="w-full h-full object-cover" />
+                          <img src={a.selfieUrl} alt={`${a.participantName}의 셀카`} className="w-full h-full object-cover" />
                         </div>
                       )}
                       {a.characterUrl && (
                         <div className="w-8 h-8 rounded-full overflow-hidden bg-slate-600">
-                          <img src={a.characterUrl} alt="" className="w-full h-full object-cover" />
+                          <img src={a.characterUrl} alt={`${a.participantName}의 캐릭터`} className="w-full h-full object-cover" />
                         </div>
                       )}
                     </div>

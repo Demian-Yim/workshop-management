@@ -13,6 +13,7 @@ import RestaurantCard from '@/components/lunch/RestaurantCard';
 import MenuEditor from '@/components/lunch/MenuEditor';
 import OrderSummaryPanel from '@/components/lunch/OrderSummaryPanel';
 import type { KakaoPlaceResult } from '@/types/restaurant';
+import { toast } from '@/components/ui/toast';
 
 const COLORS = ['#6366F1', '#F59E0B', '#22C55E', '#EF4444', '#EC4899', '#06B6D4', '#8B5CF6', '#F97316'];
 
@@ -64,6 +65,7 @@ export default function FacilitatorLunchPage() {
       });
     } catch (err) {
       console.error(err);
+      toast.error('투표 생성에 실패했습니다');
     }
     setCreating(false);
   };

@@ -9,6 +9,7 @@ import StarRating from '@/components/survey/StarRating';
 import Button from '@/components/ui/button';
 import { SkeletonList } from '@/components/ui/skeleton';
 import type { CourseReview } from '@/types/review';
+import { toast } from '@/components/ui/toast';
 
 export default function ReviewPage() {
   const { courseId, sessionId, participantId, participantName } = useSessionStore();
@@ -53,6 +54,7 @@ export default function ReviewPage() {
       setTimeout(() => setSaved(false), 2000);
     } catch (err) {
       console.error(err);
+      toast.error('저장에 실패했습니다');
     }
     setSaving(false);
   };
@@ -80,6 +82,7 @@ export default function ReviewPage() {
               onChange={(e) => setContent(e.target.value)}
               placeholder="오늘 교육은 어떠셨나요?"
               rows={4}
+              maxLength={1000}
               className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition resize-none"
             />
           </div>

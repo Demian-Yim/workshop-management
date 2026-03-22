@@ -9,6 +9,7 @@ import Avatar from '@/components/ui/avatar';
 import Button from '@/components/ui/button';
 import { SkeletonList } from '@/components/ui/skeleton';
 import type { IntroCard } from '@/types/intro';
+import { toast } from '@/components/ui/toast';
 
 export default function IntroPage() {
   const { courseId, sessionId, participantId, participantName } = useSessionStore();
@@ -54,6 +55,7 @@ export default function IntroPage() {
       setTimeout(() => setSaved(false), 2000);
     } catch (err) {
       console.error(err);
+      toast.error('저장에 실패했습니다');
     }
     setSaving(false);
   };
@@ -74,6 +76,7 @@ export default function IntroPage() {
               onChange={(e) => setContent(e.target.value)}
               placeholder="안녕하세요! 저는..."
               rows={4}
+              maxLength={500}
               className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition resize-none"
             />
           </div>
@@ -84,6 +87,7 @@ export default function IntroPage() {
               value={tags}
               onChange={(e) => setTags(e.target.value)}
               placeholder="개발자, 서울, 커피좋아"
+              maxLength={200}
               className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
             />
           </div>
@@ -115,7 +119,7 @@ export default function IntroPage() {
                 <div className="flex items-center gap-2 mb-2">
                   {intro.characterUrl ? (
                     <div className="w-8 h-8 rounded-full overflow-hidden bg-slate-100 flex-shrink-0">
-                      <img src={intro.characterUrl} alt="" className="w-full h-full object-cover" />
+                      <img src={intro.characterUrl} alt={`${intro.participantName}의 캐릭터`} className="w-full h-full object-cover" />
                     </div>
                   ) : (
                     <Avatar name={intro.participantName} size="sm" />

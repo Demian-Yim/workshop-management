@@ -122,6 +122,7 @@ export default function CreateSessionPage() {
               value={facilitatorName}
               onChange={(e) => setFacilitatorName(e.target.value)}
               placeholder="홍길동 강사"
+              maxLength={50}
               className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition"
             />
           </div>
@@ -132,6 +133,7 @@ export default function CreateSessionPage() {
               value={courseTitle}
               onChange={(e) => setCourseTitle(e.target.value)}
               placeholder="리더십 워크샵"
+              maxLength={100}
               className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition"
             />
           </div>
@@ -142,6 +144,7 @@ export default function CreateSessionPage() {
               value={sessionTitle}
               onChange={(e) => setSessionTitle(e.target.value)}
               placeholder="Day 1 - 오리엔테이션"
+              maxLength={100}
               className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition"
             />
           </div>

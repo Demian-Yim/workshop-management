@@ -10,6 +10,7 @@ import Tabs from '@/components/ui/tabs';
 import { SkeletonList } from '@/components/ui/skeleton';
 import EmptyState from '@/components/ui/empty-state';
 import Masonry from 'react-masonry-css';
+import { toast } from '@/components/ui/toast';
 
 const SORT_TABS = [
   { id: 'newest', label: '최신순' },
@@ -46,6 +47,7 @@ export default function BoardPage() {
       setShowForm(false);
     } catch (err) {
       console.error(err);
+      toast.error('게시글 등록에 실패했습니다');
     }
     setPosting(false);
   };
@@ -63,6 +65,7 @@ export default function BoardPage() {
       });
     } catch (err) {
       console.error(err);
+      toast.error('좋아요 처리에 실패했습니다');
     }
   };
 
@@ -84,6 +87,7 @@ export default function BoardPage() {
             onChange={(e) => setContent(e.target.value)}
             placeholder="의견을 자유롭게 남겨주세요..."
             rows={3}
+            maxLength={1000}
             autoFocus
             className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:border-blue-500 outline-none transition resize-none text-sm"
           />

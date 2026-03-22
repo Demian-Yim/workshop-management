@@ -130,6 +130,7 @@ function JoinContent() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="홍길동"
+              maxLength={50}
               className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition text-lg"
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && code.length === 6 && name.trim()) handleJoin();

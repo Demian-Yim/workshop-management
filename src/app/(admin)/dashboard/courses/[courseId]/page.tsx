@@ -12,6 +12,7 @@ import type { Course, Session } from '@/types/session';
 import { Skeleton } from '@/components/ui/skeleton';
 import { formatDate } from '@/lib/utils';
 import Link from 'next/link';
+import { toast } from '@/components/ui/toast';
 
 /* ── 단일 문서 실시간 구독 ── */
 function useCourseDoc(courseId: string) {
@@ -109,6 +110,7 @@ export default function CourseDetailPage() {
       setShowSessionForm(false);
     } catch (err) {
       console.error('Session creation error:', err);
+      toast.error('세션 생성에 실패했습니다');
     }
     setCreating(false);
   };
@@ -120,14 +122,21 @@ export default function CourseDetailPage() {
     try {
       await deleteDoc(doc(db, 'courses', courseId));
       router.push('/dashboard/courses');
-    } catch (err) { console.error(err); }
+    } catch (err) {
+      console.error(err);
+      toast.error('삭제에 실패했습니다');
+    }
     setDeleting(false);
   };
 
   /* ── 상태 변경 ── */
   const handleStatusChange = async (status: 'draft' | 'active' | 'completed') => {
-    try { await updateDoc(doc(db, 'courses', courseId), { status }); }
-    catch (err) { console.error(err); }
+    try {
+      await updateDoc(doc(db, 'courses', courseId), { status });
+    } catch (err) {
+      console.error(err);
+      toast.error('상태 변경에 실패했습니다');
+    }
   };
 
   /* ── 로딩 ── */
@@ -217,6 +226,7 @@ export default function CourseDetailPage() {
             <input type="text" value={sessionTitle}
               onChange={(e) => setSessionTitle(e.target.value)}
               placeholder="세션 제목 (예: Day 1 - 오리엔테이션)"
+              maxLength={100}
               className="px-4 py-2 border border-slate-200 rounded-lg focus:border-blue-500 outline-none" />
             <input type="date" value={sessionDate}
               onChange={(e) => setSessionDate(e.target.value)}

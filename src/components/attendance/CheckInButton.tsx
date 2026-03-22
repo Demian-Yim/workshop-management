@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import Button from '@/components/ui/button';
 import { setDocument, serverTimestamp } from '@/lib/firebase/firestore';
+import { toast } from '@/components/ui/toast';
 
 interface CheckInButtonProps {
   courseId: string;
@@ -39,6 +40,7 @@ export default function CheckInButton({
       onCheckIn?.();
     } catch (error) {
       console.error('Check-in failed:', error);
+      toast.error('출석 체크에 실패했습니다');
     } finally {
       setLoading(false);
     }

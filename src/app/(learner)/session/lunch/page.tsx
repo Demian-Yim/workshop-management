@@ -16,6 +16,7 @@ import { SkeletonList } from '@/components/ui/skeleton';
 import EmptyState from '@/components/ui/empty-state';
 import type { LunchVote } from '@/types/lunch';
 import type { OrderItem } from '@/types/restaurant';
+import { toast } from '@/components/ui/toast';
 
 const TABS = [
   { id: 'vote', label: '투표' },
@@ -52,6 +53,7 @@ export default function LunchPage() {
       });
     } catch (err) {
       console.error(err);
+      toast.error('투표에 실패했습니다');
     }
   };
 
@@ -63,6 +65,7 @@ export default function LunchPage() {
       setSelectedRestaurantId(null);
     } catch (err) {
       console.error(err);
+      toast.error('주문에 실패했습니다');
     }
     setSubmitting(false);
   };

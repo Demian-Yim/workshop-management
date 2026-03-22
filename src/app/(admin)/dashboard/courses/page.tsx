@@ -7,6 +7,7 @@ import { useRealtimeCollection } from '@/hooks/useRealtimeCollection';
 import type { Course } from '@/types/session';
 import Link from 'next/link';
 import { formatDate } from '@/lib/utils';
+import { toast } from '@/components/ui/toast';
 
 export default function CoursesPage() {
   const { data: courses, loading } = useRealtimeCollection<Course>('courses', [], true);
@@ -35,6 +36,7 @@ export default function CoursesPage() {
       setShowForm(false);
     } catch (err) {
       console.error(err);
+      toast.error('교육과정 등록에 실패했습니다');
     }
     setCreating(false);
   };
@@ -60,6 +62,7 @@ export default function CoursesPage() {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="교육과정명"
+              maxLength={100}
               className="px-4 py-2 border border-slate-200 rounded-lg focus:border-blue-500 outline-none"
             />
             <input
@@ -67,6 +70,7 @@ export default function CoursesPage() {
               value={facilitatorName}
               onChange={(e) => setFacilitatorName(e.target.value)}
               placeholder="담당 강사명"
+              maxLength={50}
               className="px-4 py-2 border border-slate-200 rounded-lg focus:border-blue-500 outline-none"
             />
           </div>

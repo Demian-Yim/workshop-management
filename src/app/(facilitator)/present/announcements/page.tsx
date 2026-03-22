@@ -6,6 +6,7 @@ import { orderBy } from 'firebase/firestore';
 import { useSessionStore } from '@/hooks/useSession';
 import { useRealtimeCollection } from '@/hooks/useRealtimeCollection';
 import type { Announcement } from '@/types/announcement';
+import { toast } from '@/components/ui/toast';
 
 export default function FacilitatorAnnouncementsPage() {
   const { courseId, sessionId, participantId, participantName } = useSessionStore();
@@ -36,6 +37,7 @@ export default function FacilitatorAnnouncementsPage() {
       setPriority('normal');
     } catch (err) {
       console.error(err);
+      toast.error('공지 전송에 실패했습니다');
     }
     setSending(false);
   };

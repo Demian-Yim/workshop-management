@@ -34,6 +34,7 @@ export default function AnnouncementForm({ onSubmit }: AnnouncementFormProps) {
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         placeholder="공지 제목"
+        maxLength={100}
       />
       <div>
         <label className="block text-sm font-medium text-slate-300 mb-1">내용</label>
@@ -41,6 +42,7 @@ export default function AnnouncementForm({ onSubmit }: AnnouncementFormProps) {
           value={content}
           onChange={(e) => setContent(e.target.value)}
           placeholder="공지 내용을 작성하세요..."
+          maxLength={1000}
           className="w-full px-4 py-3 border border-slate-600 bg-slate-700 text-white rounded-xl focus:ring-2 focus:ring-blue-500 resize-none"
           rows={3}
         />

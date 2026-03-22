@@ -203,7 +203,7 @@ function IntroView({ basePath }: { basePath: string }) {
           <div className="flex items-center gap-4 mb-4">
             {intro.characterUrl ? (
               <div className="w-14 h-14 rounded-full overflow-hidden bg-slate-700 flex-shrink-0">
-                <img src={intro.characterUrl} alt="" className="w-full h-full object-cover" />
+                <img src={intro.characterUrl} alt={`${intro.participantName}의 캐릭터`} className="w-full h-full object-cover" />
               </div>
             ) : (
               <div className="w-14 h-14 bg-blue-500/20 rounded-full flex items-center justify-center text-2xl font-bold text-blue-300">
@@ -262,7 +262,7 @@ function BoardView({ basePath }: { basePath: string }) {
           </p>
           {post.imageUrl && (
             <div className="mt-4 rounded-xl overflow-hidden">
-              <img src={post.imageUrl} alt="" className="w-full object-cover" />
+              <img src={post.imageUrl} alt="게시글 이미지" className="w-full object-cover" />
             </div>
           )}
         </div>

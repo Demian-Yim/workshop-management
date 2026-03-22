@@ -8,6 +8,7 @@ import { useRealtimeDocument } from '@/hooks/useRealtimeDocument';
 import StarRating from '@/components/survey/StarRating';
 import Button from '@/components/ui/button';
 import type { SurveyResponse } from '@/types/survey';
+import { toast } from '@/components/ui/toast';
 
 const defaultQuestions = [
   { id: 'q1', text: '교육 내용의 전문성', type: 'rating' as const },
@@ -65,6 +66,7 @@ export default function SurveyPage() {
       });
     } catch (err) {
       console.error(err);
+      toast.error('설문 제출에 실패했습니다');
     }
     setSaving(false);
   };
@@ -120,6 +122,7 @@ export default function SurveyPage() {
                 onChange={(e) => setText(q.id, e.target.value)}
                 placeholder="자유롭게 작성해 주세요..."
                 rows={3}
+                maxLength={1000}
                 className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:border-blue-500 outline-none transition resize-none text-sm"
               />
             )}

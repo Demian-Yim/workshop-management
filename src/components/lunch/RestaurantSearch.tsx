@@ -37,6 +37,7 @@ export default function RestaurantSearch({ onSelect, className }: RestaurantSear
         onChange={(e) => handleChange(e.target.value)}
         placeholder="식당/카페 이름으로 검색..."
         label="식당 검색"
+        maxLength={100}
       />
 
       {loading && (

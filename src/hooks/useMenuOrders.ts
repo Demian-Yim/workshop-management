@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useCallback } from 'react';
+import { Timestamp } from 'firebase/firestore';
 import { useRealtimeCollection } from './useRealtimeCollection';
 import { useSessionStore } from './useSession';
 import { setDocument } from '@/lib/firebase/firestore';
@@ -84,8 +85,8 @@ export function useMenuOrders() {
         restaurantName,
         items,
         note,
-        createdAt: new Date() as any,
-        updatedAt: new Date() as any,
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
       };
 
       await setDocument(`${basePath}/menuOrders/${participantName}`, order);

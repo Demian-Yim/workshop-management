@@ -131,6 +131,7 @@ export default function MenuEditor({
           value={newName}
           onChange={(e) => setNewName(e.target.value)}
           placeholder="메뉴 이름"
+          maxLength={50}
           className="flex-1"
           onKeyDown={(e) => e.key === 'Enter' && addItem()}
         />
@@ -138,6 +139,7 @@ export default function MenuEditor({
           value={newPrice}
           onChange={(e) => setNewPrice(e.target.value.replace(/\D/g, ''))}
           placeholder="가격"
+          maxLength={10}
           className="w-28"
           onKeyDown={(e) => e.key === 'Enter' && addItem()}
         />
