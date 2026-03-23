@@ -1,11 +1,15 @@
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
-    // Session selfies and characters: public read/write for workshop participants
+    // 세션 셀카/캐릭터: 참가자가 워크샵 중 업로드 (세션코드 인증)
     match /sessions/{sessionId}/{allPaths=**} {
-      allow read, write: if true;
+      allow read: if true;
+      // 5MB 이하 이미지만 허용
+      allow write: if request.resource == null
+                   || (request.resource.size < 5 * 1024 * 1024
+                       && request.resource.contentType.matches('image/.*'));
     }
-    // Default: authenticated users only
+    // 기본: 인증 사용자만
     match /{allPaths=**} {
       allow read, write: if request.auth != null;
     }
