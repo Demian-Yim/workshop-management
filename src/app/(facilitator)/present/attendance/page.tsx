@@ -6,6 +6,7 @@ import { useRealtimeCollection } from '@/hooks/useRealtimeCollection';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
 import type { Participant } from '@/types/session';
+import { toast } from '@/components/ui/toast';
 import QRCode from 'qrcode';
 
 export default function FacilitatorAttendancePage() {
@@ -33,9 +34,14 @@ export default function FacilitatorAttendancePage() {
 
   const toggleAttendance = async () => {
     if (!basePath) return;
-    const sessionRef = doc(db, basePath);
-    const currentOpen = sessionData?.settings?.attendanceOpen ?? false;
-    await updateDoc(sessionRef, { 'settings.attendanceOpen': !currentOpen });
+    try {
+      const sessionRef = doc(db, basePath);
+      const currentOpen = sessionData?.settings?.attendanceOpen ?? false;
+      await updateDoc(sessionRef, { 'settings.attendanceOpen': !currentOpen });
+    } catch (err) {
+      console.error(err);
+      toast.error('출석 상태 변경에 실패했습니다');
+    }
   };
 
   const isOpen = sessionData?.settings?.attendanceOpen;

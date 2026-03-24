@@ -28,7 +28,7 @@ export default function BoardPage() {
   const basePath = courseId && sessionId ? `courses/${courseId}/sessions/${sessionId}/posts` : '';
 
   const handlePost = async () => {
-    if (!basePath || !content.trim()) return;
+    if (!basePath || !participantId || !content.trim()) return;
     setPosting(true);
     try {
       await addDoc(collection(db, basePath), {
@@ -53,7 +53,7 @@ export default function BoardPage() {
   };
 
   const handleLike = async (postId: string) => {
-    if (!basePath) return;
+    if (!basePath || !participantId) return;
     const post = posts.find((p) => p.id === postId);
     if (!post) return;
     const postRef = doc(db, basePath, postId);

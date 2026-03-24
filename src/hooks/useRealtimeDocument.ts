@@ -20,6 +20,7 @@ export function useRealtimeDocument<T extends DocumentData>(
 
   useEffect(() => {
     if (!enabled || !documentPath) {
+      setData(null);
       setLoading(false);
       return;
     }

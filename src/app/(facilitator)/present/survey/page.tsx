@@ -5,6 +5,7 @@ import { useSurveyResults } from '@/hooks/useSurveyResults';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
 import EmptyState from '@/components/ui/empty-state';
+import { toast } from '@/components/ui/toast';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const questionLabels: Record<string, string> = {
@@ -22,7 +23,12 @@ export default function FacilitatorSurveyPage() {
 
   const toggleSurvey = async () => {
     if (!basePath) return;
-    await updateDoc(doc(db, basePath), { 'settings.surveyOpen': !sessionData?.settings?.surveyOpen });
+    try {
+      await updateDoc(doc(db, basePath), { 'settings.surveyOpen': !sessionData?.settings?.surveyOpen });
+    } catch (err) {
+      console.error(err);
+      toast.error('설문 상태 변경에 실패했습니다');
+    }
   };
 
   // Aggregate by question

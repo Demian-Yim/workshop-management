@@ -12,7 +12,7 @@ interface PostCardProps {
 }
 
 export default function PostCard({ post, currentUserId, onToggleLike, dark }: PostCardProps) {
-  const isLiked = currentUserId ? post.likedBy.includes(currentUserId) : false;
+  const isLiked = currentUserId ? post.likedBy?.includes(currentUserId) ?? false : false;
 
   return (
     <div className={`rounded-xl p-4 ${dark ? 'bg-slate-800' : 'bg-white border border-slate-200 shadow-sm'}`}>

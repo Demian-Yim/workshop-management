@@ -8,6 +8,7 @@ import { db } from '@/lib/firebase/config';
 import { SkeletonList } from '@/components/ui/skeleton';
 import EmptyState from '@/components/ui/empty-state';
 import Masonry from 'react-masonry-css';
+import { toast } from '@/components/ui/toast';
 
 export default function FacilitatorBoardPage() {
   const { courseId, sessionId, sessionData } = useSessionStore();
@@ -17,8 +18,13 @@ export default function FacilitatorBoardPage() {
 
   const toggleBoard = async () => {
     if (!basePath) return;
-    const sessionRef = doc(db, basePath);
-    await updateDoc(sessionRef, { 'settings.boardOpen': !sessionData?.settings?.boardOpen });
+    try {
+      const sessionRef = doc(db, basePath);
+      await updateDoc(sessionRef, { 'settings.boardOpen': !sessionData?.settings?.boardOpen });
+    } catch (err) {
+      console.error(err);
+      toast.error('게시판 상태 변경에 실패했습니다');
+    }
   };
 
   return (
