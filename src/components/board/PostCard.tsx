@@ -1,4 +1,5 @@
 'use client';
+import Image from 'next/image';
 import Avatar from '@/components/ui/avatar';
 import LikeButton from './LikeButton';
 import type { Post } from '@/types/board';
@@ -33,7 +34,7 @@ export default function PostCard({ post, currentUserId, onToggleLike, dark }: Po
         {post.content}
       </p>
       {post.imageUrl && (
-        <img src={post.imageUrl} alt="게시글 이미지" className="rounded-lg w-full mb-3 object-cover max-h-64" />
+        <Image src={post.imageUrl} alt="게시글 이미지" width={600} height={400} className="rounded-lg w-full mb-3 object-cover max-h-64" unoptimized />
       )}
       <LikeButton
         count={post.likeCount}

@@ -1,5 +1,6 @@
 ﻿'use client';
 
+import Image from 'next/image';
 import { useState, useCallback } from 'react';
 import { cn } from '@/lib/utils';
 import Button from '@/components/ui/button';
@@ -91,7 +92,7 @@ export default function AutoIntroGenerator({
         <div className="flex items-start gap-4">
           {characterUrl && (
             <div className="w-16 h-16 rounded-xl overflow-hidden bg-slate-100 flex-shrink-0">
-              <img src={characterUrl} alt="캐릭터" className="w-full h-full object-cover" />
+              <Image src={characterUrl} alt="캐릭터" width={64} height={64} className="w-full h-full object-cover" unoptimized />
             </div>
           )}
           <div className="flex-1 min-w-0">

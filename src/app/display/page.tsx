@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useState, useMemo } from 'react';
 import { orderBy } from 'firebase/firestore';
@@ -155,7 +156,7 @@ function WelcomeView({
         {qrUrl && (
           <div className="text-center">
             <div className="bg-white p-5 rounded-2xl inline-block shadow-xl shadow-blue-500/10">
-              <img src={qrUrl} alt="Join QR" className="w-72 h-72" />
+              <Image src={qrUrl} alt="Join QR" width={288} height={288} className="w-72 h-72" unoptimized />
             </div>
             <p className="text-slate-500 mt-4 text-sm">QR 코드를 스캔하여 참여하세요</p>
           </div>
@@ -203,7 +204,7 @@ function IntroView({ basePath }: { basePath: string }) {
           <div className="flex items-center gap-4 mb-4">
             {intro.characterUrl ? (
               <div className="w-14 h-14 rounded-full overflow-hidden bg-slate-700 flex-shrink-0">
-                <img src={intro.characterUrl} alt={`${intro.participantName}의 캐릭터`} className="w-full h-full object-cover" />
+                <Image src={intro.characterUrl} alt={`${intro.participantName}의 캐릭터`} width={56} height={56} className="w-full h-full object-cover" unoptimized />
               </div>
             ) : (
               <div className="w-14 h-14 bg-blue-500/20 rounded-full flex items-center justify-center text-2xl font-bold text-blue-300">
@@ -262,7 +263,7 @@ function BoardView({ basePath }: { basePath: string }) {
           </p>
           {post.imageUrl && (
             <div className="mt-4 rounded-xl overflow-hidden">
-              <img src={post.imageUrl} alt="게시글 이미지" className="w-full object-cover" />
+              <Image src={post.imageUrl} alt="게시글 이미지" width={800} height={400} className="w-full object-cover" unoptimized />
             </div>
           )}
         </div>

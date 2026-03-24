@@ -1,4 +1,5 @@
 ﻿'use client';
+import Image from 'next/image';
 import { useSessionStore } from '@/hooks/useSession';
 import { useRealtimeCollection } from '@/hooks/useRealtimeCollection';
 import type { IntroCard } from '@/types/intro';
@@ -35,7 +36,7 @@ export default function FacilitatorIntroPage() {
               <div className="flex items-center gap-3 mb-3">
                 {intro.characterUrl ? (
                   <div className="w-10 h-10 rounded-full overflow-hidden bg-slate-700 flex-shrink-0">
-                    <img src={intro.characterUrl} alt={`${intro.participantName}의 캐릭터`} className="w-full h-full object-cover" />
+                    <Image src={intro.characterUrl} alt={`${intro.participantName}의 캐릭터`} width={40} height={40} className="w-full h-full object-cover" unoptimized />
                   </div>
                 ) : (
                   <div className="w-10 h-10 bg-blue-500/20 rounded-full flex items-center justify-center text-lg font-bold text-blue-300">

@@ -20,6 +20,7 @@ export function useRealtimeDocument<T extends DocumentData>(
 
   useEffect(() => {
     if (!enabled || !documentPath) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional: reset stale data when path becomes invalid
       setData(null);
       setLoading(false);
       return;

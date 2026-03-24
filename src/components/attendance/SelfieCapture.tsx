@@ -1,5 +1,6 @@
 ﻿'use client';
 
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { useCamera } from '@/hooks/useCamera';
@@ -68,7 +69,7 @@ export default function SelfieCapture({ onCapture, onSkip, className }: SelfieCa
 
       <div className="relative mx-auto w-64 h-64 rounded-xl overflow-hidden bg-slate-100">
         {preview ? (
-          <img src={preview} alt="셀카 미리보기" className="w-full h-full object-cover" />
+          <Image src={preview} alt="셀카 미리보기" width={256} height={256} className="w-full h-full object-cover" unoptimized />
         ) : (
           <>
             <video

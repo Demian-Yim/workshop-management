@@ -18,7 +18,6 @@ interface MarkerData {
 
 interface UseKakaoMapResult {
   mapRef: React.RefObject<HTMLDivElement | null>;
-  map: KakaoMap | null;
   isLoaded: boolean;
   error: string | null;
   addMarker: (data: MarkerData) => void;
@@ -69,6 +68,7 @@ export function useKakaoMap(options: UseKakaoMapOptions = {}): UseKakaoMapResult
   useEffect(() => {
     const apiKey = process.env.NEXT_PUBLIC_KAKAO_MAP_API_KEY;
     if (!apiKey) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- synchronous early return for missing config
       setError('카카오맵 API 키가 설정되지 않았습니다');
       return;
     }
@@ -149,7 +149,6 @@ export function useKakaoMap(options: UseKakaoMapOptions = {}): UseKakaoMapResult
 
   return {
     mapRef,
-    map: mapInstanceRef.current,
     isLoaded,
     error,
     addMarker,

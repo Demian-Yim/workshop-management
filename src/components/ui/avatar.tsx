@@ -1,4 +1,5 @@
 ﻿'use client';
+import Image from 'next/image';
 import { cn } from '@/lib/utils';
 
 interface AvatarProps {
@@ -13,11 +14,16 @@ export default function Avatar({ name, imageUrl, size = 'md', className }: Avata
   const initial = name ? name[0] : '?';
 
   if (imageUrl) {
+    const dimensionMap = { sm: 32, md: 40, lg: 56 };
+    const dim = dimensionMap[size];
     return (
-      <img
+      <Image
         src={imageUrl}
         alt={name}
+        width={dim}
+        height={dim}
         className={cn('rounded-full object-cover', sizes[size], className)}
+        unoptimized
       />
     );
   }

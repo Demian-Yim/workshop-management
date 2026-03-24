@@ -1,4 +1,5 @@
 ﻿'use client';
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useSessionStore } from '@/hooks/useSession';
 import { useAttendance } from '@/hooks/useAttendance';
@@ -71,7 +72,7 @@ export default function FacilitatorAttendancePage() {
           <h2 className="text-lg font-semibold text-slate-200 mb-4">QR 코드로 참여</h2>
           {qrUrl && (
             <div className="bg-white p-4 rounded-xl inline-block mb-4">
-              <img src={qrUrl} alt="QR Code" className="w-64 h-64" />
+              <Image src={qrUrl} alt="QR Code" width={256} height={256} className="w-64 h-64" unoptimized />
             </div>
           )}
           <div className="text-6xl font-mono font-bold text-blue-400 tracking-[0.3em]">
@@ -104,12 +105,12 @@ export default function FacilitatorAttendancePage() {
                     <div className="flex gap-1 flex-shrink-0">
                       {a.selfieUrl && (
                         <div className="w-8 h-8 rounded-full overflow-hidden bg-slate-600">
-                          <img src={a.selfieUrl} alt={`${a.participantName}의 셀카`} className="w-full h-full object-cover" />
+                          <Image src={a.selfieUrl} alt={`${a.participantName}의 셀카`} width={32} height={32} className="w-full h-full object-cover" unoptimized />
                         </div>
                       )}
                       {a.characterUrl && (
                         <div className="w-8 h-8 rounded-full overflow-hidden bg-slate-600">
-                          <img src={a.characterUrl} alt={`${a.participantName}의 캐릭터`} className="w-full h-full object-cover" />
+                          <Image src={a.characterUrl} alt={`${a.participantName}의 캐릭터`} width={32} height={32} className="w-full h-full object-cover" unoptimized />
                         </div>
                       )}
                     </div>

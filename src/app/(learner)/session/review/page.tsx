@@ -30,9 +30,10 @@ export default function ReviewPage() {
     basePath ? `${basePath}/reviews` : '', [], !!basePath
   );
 
-  // Initialize form fields from existing review data
+  // Initialize form fields from existing review data (intentional one-time init from async Firestore data)
   useEffect(() => {
     if (myReview) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional: lazy init from Firestore data
       setContent((prev) => prev || myReview.content || '');
       setRating(myReview.rating || 5);
       setIsAnonymous(myReview.isAnonymous || false);

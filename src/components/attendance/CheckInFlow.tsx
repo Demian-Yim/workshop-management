@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useCallback } from 'react';
 import { cn } from '@/lib/utils';
 import { useSessionStore } from '@/hooks/useSession';
@@ -181,10 +182,13 @@ export default function CheckInFlow({ className }: CheckInFlowProps) {
           {state.characterUrl && (
             <div className="inline-block">
               <div className="w-24 h-24 rounded-xl overflow-hidden bg-slate-100 mx-auto">
-                <img
+                <Image
                   src={state.characterUrl}
                   alt="내 캐릭터"
+                  width={96}
+                  height={96}
                   className="w-full h-full object-cover"
+                  unoptimized
                 />
               </div>
             </div>

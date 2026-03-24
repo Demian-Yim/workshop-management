@@ -1,5 +1,6 @@
 ﻿'use client';
 
+import Image from 'next/image';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import Button from '@/components/ui/button';
@@ -71,7 +72,7 @@ export default function CharacterPreview({
         {selfieUrl && (
           <div className="text-center">
             <div className="w-32 h-32 rounded-xl overflow-hidden bg-slate-100">
-              <img src={selfieUrl} alt="셀카" className="w-full h-full object-cover" />
+              <Image src={selfieUrl} alt="셀카" width={128} height={128} className="w-full h-full object-cover" unoptimized />
             </div>
             <p className="text-xs text-slate-400 mt-1">원본</p>
           </div>
@@ -91,10 +92,13 @@ export default function CharacterPreview({
                 <p className="text-xs text-slate-400 mt-2">생성 중...</p>
               </div>
             ) : characterBase64 ? (
-              <img
+              <Image
                 src={`data:image/png;base64,${characterBase64}`}
                 alt="캐릭터"
+                width={128}
+                height={128}
                 className="w-full h-full object-cover"
+                unoptimized
               />
             ) : (
               <div className="text-slate-300 text-4xl">?</div>

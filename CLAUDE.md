@@ -1,6 +1,6 @@
 # workshop-management — CLAUDE.md
 
-> Antigravity FLOW~ 워크샵 관리 웹앱
+> FLOW~ : AX Design Lab — 워크샵 관리 웹앱
 
 ## 프로젝트 개요
 

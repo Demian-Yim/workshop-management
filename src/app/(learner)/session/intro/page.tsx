@@ -1,4 +1,5 @@
 ﻿'use client';
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
@@ -29,9 +30,10 @@ export default function IntroPage() {
     basePath ? `${basePath}/introCards` : '', [], !!basePath
   );
 
-  // Initialize form fields from existing intro data
+  // Initialize form fields from existing intro data (intentional one-time init from async Firestore data)
   useEffect(() => {
     if (myIntro) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional: lazy init from Firestore data
       setContent((prev) => prev || myIntro.content || '');
       setTags((prev) => prev || myIntro.tags?.join(', ') || '');
     }
@@ -119,7 +121,7 @@ export default function IntroPage() {
                 <div className="flex items-center gap-2 mb-2">
                   {intro.characterUrl ? (
                     <div className="w-8 h-8 rounded-full overflow-hidden bg-slate-100 flex-shrink-0">
-                      <img src={intro.characterUrl} alt={`${intro.participantName}의 캐릭터`} className="w-full h-full object-cover" />
+                      <Image src={intro.characterUrl} alt={`${intro.participantName}의 캐릭터`} width={32} height={32} className="w-full h-full object-cover" unoptimized />
                     </div>
                   ) : (
                     <Avatar name={intro.participantName} size="sm" />

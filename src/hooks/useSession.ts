@@ -65,6 +65,7 @@ export const useSessionStore = create<SessionState>()(
 export function useSessionHydrated(): boolean {
   const storeHydrated = useSessionStore((s) => s._hasHydrated);
   const [mounted, setMounted] = useState(false);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- canonical SSR hydration detection pattern
   useEffect(() => setMounted(true), []);
   return mounted && storeHydrated;
 }
