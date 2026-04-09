@@ -1,8 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { checkRateLimit, getClientIp } from '@/lib/rateLimit';
 
 const NANOBANANA_API_KEY = process.env.NANOBANANA_API_KEY;
 const NANOBANANA_API_URL = process.env.NANOBANANA_API_URL;
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+
+// Warn at startup if no provider is configured — ops can catch this in logs.
+if (!NANOBANANA_API_KEY && !GEMINI_API_KEY) {
+  console.warn('[character/generate] No provider configured: NANOBANANA_API_KEY and GEMINI_API_KEY are both missing. Character generation will fail.');
+}
+if (NANOBANANA_API_KEY && !NANOBANANA_API_URL) {
+  console.warn('[character/generate] NANOBANANA_API_KEY is set but NANOBANANA_API_URL is missing. NanoBanana provider will be skipped.');
+}
 
 interface GenerateRequest {
   imageBase64: string;
@@ -10,6 +19,21 @@ interface GenerateRequest {
 }
 
 export async function POST(request: NextRequest) {
+  const ip = getClientIp(request);
+  const rl = checkRateLimit(`character:${ip}`, { limit: 10, windowMs: 60_000 });
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: '요청이 너무 많습니다. 잠시 후 다시 시도하세요.' },
+      {
+        status: 429,
+        headers: {
+          'Retry-After': String(Math.ceil((rl.resetAt - Date.now()) / 1000)),
+          'X-RateLimit-Remaining': '0',
+        },
+      }
+    );
+  }
+
   let body: GenerateRequest;
 
   try {
@@ -39,9 +63,15 @@ export async function POST(request: NextRequest) {
           provider: 'nanobanana',
         });
       }
+      console.warn('[character/generate] NanoBanana returned no image data (style=%s)', style);
     } catch (error) {
-      console.error('NanoBanana API error:', error);
+      console.error('[character/generate] NanoBanana provider failed:', {
+        style,
+        error: error instanceof Error ? error.message : String(error),
+      });
     }
+  } else if (!NANOBANANA_API_KEY) {
+    console.info('[character/generate] Skipping NanoBanana: NANOBANANA_API_KEY not set');
   }
 
   // Fallback to Gemini
@@ -55,11 +85,18 @@ export async function POST(request: NextRequest) {
           provider: 'gemini',
         });
       }
+      console.warn('[character/generate] Gemini returned no image data (style=%s)', style);
     } catch (error) {
-      console.error('Gemini API error:', error);
+      console.error('[character/generate] Gemini provider failed:', {
+        style,
+        error: error instanceof Error ? error.message : String(error),
+      });
     }
+  } else {
+    console.info('[character/generate] Skipping Gemini: GEMINI_API_KEY not set');
   }
 
+  console.error('[character/generate] All providers exhausted — returning 503', { style });
   return NextResponse.json(
     {
       success: false,
@@ -88,8 +125,7 @@ async function generateWithNanoBanana(
 
   if (!response.ok) {
     const errorText = await response.text();
-    console.error('NanoBanana response error:', response.status, errorText);
-    return null;
+    throw new Error(`NanoBanana HTTP ${response.status}: ${errorText.slice(0, 200)}`);
   }
 
   const data = await response.json();
@@ -139,8 +175,7 @@ Output only the generated character image.`;
 
   if (!response.ok) {
     const errorText = await response.text();
-    console.error('Gemini response error:', response.status, errorText);
-    return null;
+    throw new Error(`Gemini HTTP ${response.status}: ${errorText.slice(0, 200)}`);
   }
 
   const data = await response.json();

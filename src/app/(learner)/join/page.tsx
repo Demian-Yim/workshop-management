@@ -38,7 +38,14 @@ function JoinContent() {
 
     try {
       const result = await validateSessionCode(normalized);
-      if (!result) { setError('유효하지 않은 세션 코드입니다'); setLoading(false); return; }
+      if (!result.ok) {
+        const msg = result.reason === 'expired'
+          ? '세션이 만료되었습니다. 강사에게 문의하세요'
+          : '유효하지 않은 세션 코드입니다';
+        setError(msg);
+        setLoading(false);
+        return;
+      }
 
       const participantId = generateId();
 

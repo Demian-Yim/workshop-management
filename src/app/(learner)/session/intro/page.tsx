@@ -11,9 +11,10 @@ import Button from '@/components/ui/button';
 import { SkeletonList } from '@/components/ui/skeleton';
 import type { IntroCard } from '@/types/intro';
 import { toast } from '@/components/ui/toast';
+import FeatureClosed from '@/components/ui/feature-closed';
 
 export default function IntroPage() {
-  const { courseId, sessionId, participantId, participantName } = useSessionStore();
+  const { courseId, sessionId, participantId, participantName, sessionData } = useSessionStore();
   const [content, setContent] = useState('');
   const [tags, setTags] = useState('');
   const [saving, setSaving] = useState(false);
@@ -61,6 +62,10 @@ export default function IntroPage() {
     }
     setSaving(false);
   };
+
+  if (sessionData && sessionData.settings?.introOpen === false) {
+    return <FeatureClosed message="강사가 자기소개를 아직 열지 않았습니다" />;
+  }
 
   if (myIntroLoading) {
     return <SkeletonList count={2} />;

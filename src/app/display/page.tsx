@@ -52,7 +52,8 @@ function DisplayContent() {
         role: 'facilitator',
       });
     }
-  }, [paramCourseId, paramSessionId]); // eslint-disable-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- setSession is stable (Zustand); re-running when it changes would cause an infinite loop
+  }, [paramCourseId, paramSessionId]);
 
   const sessionPath = courseId && sessionId ? `courses/${courseId}/sessions/${sessionId}` : '';
 
@@ -149,7 +150,7 @@ function WelcomeView({
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-10rem)]">
       <h2 className="text-5xl font-bold text-white mb-2">{session?.title || '워크샵'}</h2>
-      <p className="text-xl text-slate-400 mb-12">FLOW~ 사람과 일의 흐름을 디자인합니다</p>
+      <p className="text-xl text-slate-400 mb-12">FLOW~ : AX Design Lab 사람과 일의 흐름을 디자인합니다</p>
 
       <div className="flex items-center gap-16">
         {/* QR 코드 */}

@@ -11,6 +11,7 @@ import { SkeletonList } from '@/components/ui/skeleton';
 import EmptyState from '@/components/ui/empty-state';
 import Masonry from 'react-masonry-css';
 import { toast } from '@/components/ui/toast';
+import FeatureClosed from '@/components/ui/feature-closed';
 
 const SORT_TABS = [
   { id: 'newest', label: '최신순' },
@@ -18,7 +19,7 @@ const SORT_TABS = [
 ];
 
 export default function BoardPage() {
-  const { courseId, sessionId, participantId, participantName } = useSessionStore();
+  const { courseId, sessionId, participantId, participantName, sessionData } = useSessionStore();
   const [sortBy, setSortBy] = useState<'newest' | 'popular'>('newest');
   const { posts, loading } = usePosts(sortBy);
   const [content, setContent] = useState('');
@@ -68,6 +69,10 @@ export default function BoardPage() {
       toast.error('좋아요 처리에 실패했습니다');
     }
   };
+
+  if (sessionData && sessionData.settings?.boardOpen === false) {
+    return <FeatureClosed message="강사가 게시판을 아직 열지 않았습니다" />;
+  }
 
   return (
     <div className="space-y-4 animate-fade-in">

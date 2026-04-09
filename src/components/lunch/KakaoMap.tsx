@@ -34,9 +34,9 @@ export default function KakaoMap({
     if (!isLoaded) return;
     clearMarkers();
     markers.forEach((m) => {
-      addMarkerWithInfoWindow(m, m.title);
+      addMarkerWithInfoWindow(m, m.title, onMarkerClick ? () => onMarkerClick(m.id) : undefined);
     });
-  }, [isLoaded, markers, clearMarkers, addMarkerWithInfoWindow]);
+  }, [isLoaded, markers, clearMarkers, addMarkerWithInfoWindow, onMarkerClick]);
 
   useEffect(() => {
     if (isLoaded && latitude && longitude) {

@@ -54,8 +54,15 @@ export const useSessionStore = create<SessionState>()(
     }),
     {
       name: 'workshop-session',
-      onRehydrateStorage: () => (state) => {
-        state?.setHasHydrated(true);
+      onRehydrateStorage: () => (state, error) => {
+        if (error) {
+          // Hydration failed (e.g. corrupt localStorage) — mark hydrated anyway
+          // so the UI doesn't hang on the loading spinner indefinitely.
+          console.warn('[useSession] Zustand rehydration failed:', error);
+          useSessionStore.getState().setHasHydrated(true);
+        } else {
+          state?.setHasHydrated(true);
+        }
       },
     }
   )

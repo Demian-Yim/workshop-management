@@ -9,6 +9,7 @@ import StarRating from '@/components/survey/StarRating';
 import Button from '@/components/ui/button';
 import type { SurveyResponse } from '@/types/survey';
 import { toast } from '@/components/ui/toast';
+import FeatureClosed from '@/components/ui/feature-closed';
 
 const defaultQuestions = [
   { id: 'q1', text: '교육 내용의 전문성', type: 'rating' as const },
@@ -22,7 +23,7 @@ const defaultQuestions = [
 const ratingQuestions = defaultQuestions.filter((q) => q.type === 'rating');
 
 export default function SurveyPage() {
-  const { courseId, sessionId, participantId } = useSessionStore();
+  const { courseId, sessionId, participantId, sessionData } = useSessionStore();
   const basePath = courseId && sessionId ? `courses/${courseId}/sessions/${sessionId}` : '';
 
   const [responses, setResponses] = useState<Record<string, number | string>>({});
@@ -70,6 +71,10 @@ export default function SurveyPage() {
     }
     setSaving(false);
   };
+
+  if (sessionData && sessionData.settings?.surveyOpen === false) {
+    return <FeatureClosed message="강사가 설문을 아직 열지 않았습니다" />;
+  }
 
   if (myResponse) {
     return (

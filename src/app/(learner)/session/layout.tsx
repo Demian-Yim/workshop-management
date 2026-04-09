@@ -1,12 +1,17 @@
 ﻿'use client';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Home, MessageSquare, UtensilsCrossed, Bell, BarChart3 } from 'lucide-react';
+import { Home, MessageSquare, UtensilsCrossed, Bell, BarChart3, LogOut } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { useSessionStore, useSessionHydrated } from '@/hooks/useSession';
 import { useRealtimeDocument } from '@/hooks/useRealtimeDocument';
+import { useRealtimeCollection } from '@/hooks/useRealtimeCollection';
 import type { Session } from '@/types/session';
-import { useEffect } from 'react';
+import type { Announcement } from '@/types/announcement';
+import { orderBy } from 'firebase/firestore';
+import { useEffect, useMemo, useRef, useState } from 'react';
+
+const LAST_SEEN_KEY = 'announcements_last_seen_at';
 
 interface NavItem {
   href: string;
@@ -26,7 +31,7 @@ export default function LearnerSessionLayout({ children }: { children: React.Rea
   const pathname = usePathname();
   const router = useRouter();
   const hydrated = useSessionHydrated();
-  const { courseId, sessionId, participantName, sessionCode, setSessionData } = useSessionStore();
+  const { courseId, sessionId, participantName, sessionCode, setSessionData, clearSession } = useSessionStore();
 
   const hasSession = !!(courseId && sessionId && sessionCode);
 
@@ -34,6 +39,42 @@ export default function LearnerSessionLayout({ children }: { children: React.Rea
     courseId && sessionId ? `courses/${courseId}/sessions/${sessionId}` : '',
     !!(courseId && sessionId)
   );
+
+  const announcementPath = courseId && sessionId
+    ? `courses/${courseId}/sessions/${sessionId}/announcements`
+    : '';
+  const announcementConstraints = useMemo(() => [orderBy('createdAt', 'desc')], []);
+  const { data: announcements } = useRealtimeCollection<Announcement>(
+    announcementPath, announcementConstraints, !!announcementPath
+  );
+
+  const lastSeenAtRef = useRef<number>(0);
+  const [lastSeenAt, setLastSeenAt] = useState<number>(0);
+
+  // Load last-seen timestamp from localStorage after mount
+  useEffect(() => {
+    const stored = localStorage.getItem(LAST_SEEN_KEY);
+    const value = stored ? Number(stored) : 0;
+    lastSeenAtRef.current = value;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- one-time hydration from localStorage
+    setLastSeenAt(value);
+  }, []);
+
+  // Mark all as seen when the user is on the announcements page
+  useEffect(() => {
+    if (pathname === '/session/announcements') {
+      const now = Date.now();
+      localStorage.setItem(LAST_SEEN_KEY, String(now));
+      lastSeenAtRef.current = now;
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- sync localStorage change to render
+      setLastSeenAt(now);
+    }
+  }, [pathname]);
+
+  const unreadCount = announcements.filter((ann) => {
+    if (!ann.createdAt) return false;
+    return ann.createdAt.toMillis() > lastSeenAt;
+  }).length;
 
   useEffect(() => {
     if (session) setSessionData(session);
@@ -68,9 +109,18 @@ export default function LearnerSessionLayout({ children }: { children: React.Rea
             <h1 className="font-bold text-slate-900 text-sm">{session?.title || '워크샵'}</h1>
             <p className="text-xs text-slate-500">{participantName}</p>
           </div>
-          <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full font-medium">
-            {session?.sessionCode || sessionCode || '----'}
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full font-medium">
+              {session?.sessionCode || sessionCode || '----'}
+            </span>
+            <button
+              onClick={() => { clearSession(); router.replace('/join'); }}
+              title="세션 나가기"
+              className="p-1.5 text-slate-400 hover:text-red-500 transition rounded-lg hover:bg-red-50"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       </header>
 
@@ -81,6 +131,7 @@ export default function LearnerSessionLayout({ children }: { children: React.Rea
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             const Icon = item.icon;
+            const badge = item.href === '/session/announcements' && unreadCount > 0 ? unreadCount : 0;
             return (
               <Link
                 key={item.href}
@@ -91,7 +142,14 @@ export default function LearnerSessionLayout({ children }: { children: React.Rea
                     : 'text-slate-400 hover:text-slate-600 border-t-2 border-transparent'
                 }`}
               >
-                <Icon className="w-5 h-5 mb-0.5" />
+                <span className="relative">
+                  <Icon className="w-5 h-5 mb-0.5" />
+                  {badge > 0 && (
+                    <span className="absolute -top-1 -right-1 min-w-[14px] h-[14px] bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center leading-none px-0.5">
+                      {badge > 9 ? '9+' : badge}
+                    </span>
+                  )}
+                </span>
                 <span className={isActive ? 'font-semibold' : ''}>{item.label}</span>
               </Link>
             );

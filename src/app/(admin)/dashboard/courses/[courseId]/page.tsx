@@ -3,9 +3,10 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import {
   doc, updateDoc, deleteDoc, addDoc, setDoc,
-  collection, serverTimestamp, Timestamp, onSnapshot,
+  collection, getDocs, serverTimestamp, Timestamp, onSnapshot,
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
+import { deleteSubcollections } from '@/lib/firebase/firestore';
 import { useRealtimeCollection } from '@/hooks/useRealtimeCollection';
 import { generateSessionCode } from '@/lib/session';
 import type { Course, Session } from '@/types/session';
@@ -115,11 +116,28 @@ export default function CourseDetailPage() {
     setCreating(false);
   };
 
-  /* ── 교육과정 삭제 ── */
+  /* ── 교육과정 삭제 (하위 세션 + 서브컬렉션 재귀 삭제) ── */
+  const SESSION_SUBCOLLECTIONS = [
+    'participants', 'attendance', 'introCards', 'posts', 'teams',
+    'announcements', 'lunchPoll', 'lunchVotes', 'restaurants',
+    'menuOrders', 'reviews', 'surveyResponses',
+  ];
+
   const handleDeleteCourse = async () => {
     if (!confirm('이 교육과정을 삭제하시겠습니까?\n(하위 세션도 모두 삭제됩니다)')) return;
     setDeleting(true);
     try {
+      // 1) 각 세션의 서브컬렉션 삭제 후 세션 문서 삭제
+      const sessionsRef = collection(db, 'courses', courseId, 'sessions');
+      const sessionsSnap = await getDocs(sessionsRef);
+
+      for (const sessionDoc of sessionsSnap.docs) {
+        const sessionPath = `courses/${courseId}/sessions/${sessionDoc.id}`;
+        await deleteSubcollections(sessionPath, SESSION_SUBCOLLECTIONS);
+        await deleteDoc(doc(db, sessionPath));
+      }
+
+      // 2) 코스 문서 삭제
       await deleteDoc(doc(db, 'courses', courseId));
       router.push('/dashboard/courses');
     } catch (err) {

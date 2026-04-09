@@ -5,6 +5,7 @@ import { serverTimestamp } from 'firebase/firestore';
 import { setDocument } from '@/lib/firebase/firestore';
 import { uploadImage } from '@/lib/firebase/storage';
 import { useSessionStore } from '@/hooks/useSession';
+import { toast } from '@/components/ui/toast';
 import type { CheckInFlowStep, CheckInFlowState } from '@/types/character';
 
 const INITIAL_STATE: CheckInFlowState = {
@@ -91,9 +92,10 @@ export function useCheckInFlow(): UseCheckInFlowReturn {
           });
 
           setState((prev) => ({ ...prev, selfieUrl: storageUrl }));
-        } catch {
+        } catch (err) {
           // Storage upload failed (e.g., permissions) — keep data URL
-          console.warn('셀카 Storage 업로드 실패, data URL 유지');
+          console.error('셀카 Storage 업로드 실패, data URL 유지:', err);
+          toast.error('이미지 업로드에 실패했습니다');
         }
       })();
 
@@ -135,8 +137,9 @@ export function useCheckInFlow(): UseCheckInFlowReturn {
           });
 
           setState((prev) => ({ ...prev, characterUrl: storageUrl }));
-        } catch {
-          console.warn('캐릭터 Storage 업로드 실패, data URL 유지');
+        } catch (err) {
+          console.error('캐릭터 Storage 업로드 실패, data URL 유지:', err);
+          toast.error('이미지 업로드에 실패했습니다');
         }
       })();
 

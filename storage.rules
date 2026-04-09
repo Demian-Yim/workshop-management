@@ -4,9 +4,9 @@ service firebase.storage {
     // 세션 셀카/캐릭터: 참가자가 워크샵 중 업로드 (세션코드 인증)
     match /sessions/{sessionId}/{allPaths=**} {
       allow read: if true;
-      // 5MB 이하 이미지만 허용
+      // 2MB 이하 이미지만 허용
       allow write: if request.resource == null
-                   || (request.resource.size < 5 * 1024 * 1024
+                   || (request.resource.size < 2 * 1024 * 1024
                        && request.resource.contentType.matches('image/.*'));
     }
     // 기본: 인증 사용자만

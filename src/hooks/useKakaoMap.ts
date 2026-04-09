@@ -23,7 +23,16 @@ interface UseKakaoMapResult {
   addMarker: (data: MarkerData) => void;
   clearMarkers: () => void;
   setCenter: (latitude: number, longitude: number) => void;
-  addMarkerWithInfoWindow: (data: MarkerData, content: string) => void;
+  addMarkerWithInfoWindow: (data: MarkerData, content: string, onClick?: () => void) => void;
+}
+
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
 const KAKAO_SDK_URL = 'https://dapi.kakao.com/v2/maps/sdk.js';
@@ -112,7 +121,7 @@ export function useKakaoMap(options: UseKakaoMapOptions = {}): UseKakaoMapResult
   }, []);
 
   const addMarkerWithInfoWindow = useCallback(
-    (data: MarkerData, content: string) => {
+    (data: MarkerData, content: string, onClick?: () => void) => {
       const map = mapInstanceRef.current;
       if (!map || !window.kakao?.maps) return;
 
@@ -124,11 +133,12 @@ export function useKakaoMap(options: UseKakaoMapOptions = {}): UseKakaoMapResult
       });
 
       const infoWindow = new window.kakao.maps.InfoWindow({
-        content: `<div style="padding:5px;font-size:12px;">${content}</div>`,
+        content: `<div style="padding:5px;font-size:12px;">${escapeHtml(content)}</div>`,
       });
 
       window.kakao.maps.event.addListener(marker, 'click', () => {
         infoWindow.open(map, marker);
+        if (onClick) onClick();
       });
 
       markersRef.current.push(marker);

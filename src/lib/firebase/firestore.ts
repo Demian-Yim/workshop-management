@@ -54,4 +54,39 @@ export async function queryDocuments<T>(
   return snap.docs.map((d) => ({ id: d.id, ...d.data() }) as T);
 }
 
+/**
+ * Recursively delete all documents in a subcollection and its nested subcollections.
+ * Uses writeBatch with 500-document limit per batch.
+ */
+export async function deleteSubcollections(
+  parentPath: string,
+  subcollectionNames: string[],
+): Promise<void> {
+  const { writeBatch } = await import('firebase/firestore');
+
+  for (const subName of subcollectionNames) {
+    const colRef = collection(db, `${parentPath}/${subName}`);
+    const snap = await getDocs(colRef);
+
+    // Process in batches of 500
+    let batch = writeBatch(db);
+    let count = 0;
+
+    for (const docSnap of snap.docs) {
+      batch.delete(docSnap.ref);
+      count += 1;
+
+      if (count >= 500) {
+        await batch.commit();
+        batch = writeBatch(db);
+        count = 0;
+      }
+    }
+
+    if (count > 0) {
+      await batch.commit();
+    }
+  }
+}
+
 export { increment, arrayUnion, arrayRemove, serverTimestamp, doc, collection, updateDoc };

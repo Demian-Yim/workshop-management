@@ -25,7 +25,8 @@ export function usePosts(sortBy: 'newest' | 'popular' = 'newest') {
   const { data, loading, error } = useRealtimeCollection<Post>(
     path,
     constraints,
-    !!path
+    !!path,
+    100
   );
 
   return { posts: data, loading, error };

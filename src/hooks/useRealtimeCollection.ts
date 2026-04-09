@@ -8,6 +8,7 @@ import {
   QueryConstraint,
   DocumentData,
   FirestoreError,
+  limit as firestoreLimit,
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
 
@@ -20,7 +21,8 @@ interface UseRealtimeCollectionResult<T> {
 export function useRealtimeCollection<T extends DocumentData>(
   collectionPath: string,
   constraints: QueryConstraint[] = [],
-  enabled: boolean = true
+  enabled: boolean = true,
+  pageSize?: number
 ): UseRealtimeCollectionResult<T> {
   const [data, setData] = useState<T[]>([]);
   const [loading, setLoading] = useState(true);
@@ -33,7 +35,10 @@ export function useRealtimeCollection<T extends DocumentData>(
     }
 
     const colRef = collection(db, collectionPath);
-    const q = constraints.length > 0 ? query(colRef, ...constraints) : colRef;
+    const allConstraints = pageSize
+      ? [...constraints, firestoreLimit(pageSize)]
+      : constraints;
+    const q = allConstraints.length > 0 ? query(colRef, ...allConstraints) : colRef;
 
     const unsubscribe = onSnapshot(
       q,
@@ -53,8 +58,8 @@ export function useRealtimeCollection<T extends DocumentData>(
     );
 
     return () => unsubscribe();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [collectionPath, enabled]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- constraints is an array; deep-comparing it would require a custom hook. Callers must memoize constraints with useMemo to avoid infinite loops.
+  }, [collectionPath, enabled, pageSize]);
 
   return { data, loading, error };
 }

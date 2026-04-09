@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'FLOW~ Display',
+  title: 'FLOW~ : AX Design Lab Display',
 };
 
 export default function DisplayLayout({ children }: { children: React.ReactNode }) {

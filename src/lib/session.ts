@@ -14,19 +14,27 @@ export function generateSessionCode(): string {
   return code;
 }
 
+export type SessionCodeResult =
+  | { ok: true; courseId: string; sessionId: string; role: 'learner' | 'facilitator' }
+  | { ok: false; reason: 'not_found' | 'expired' };
+
 /** sessionCodes/{code} 문서를 조회하여 세션 매핑 + 역할 반환 */
-export async function validateSessionCode(
-  code: string
-): Promise<{ courseId: string; sessionId: string; role: 'learner' | 'facilitator' } | null> {
+export async function validateSessionCode(code: string): Promise<SessionCodeResult> {
   const normalized = code.trim().toUpperCase();
-  if (normalized.length !== CODE_LENGTH) return null;
+  if (normalized.length !== CODE_LENGTH) return { ok: false, reason: 'not_found' };
 
   const codeDoc = doc(db, 'sessionCodes', normalized);
   const snap = await getDoc(codeDoc);
-  if (!snap.exists()) return null;
+  if (!snap.exists()) return { ok: false, reason: 'not_found' };
 
   const data = snap.data() as SessionCode;
+
+  if (data.expiresAt && data.expiresAt.toDate() < new Date()) {
+    return { ok: false, reason: 'expired' };
+  }
+
   return {
+    ok: true,
     courseId: data.courseId,
     sessionId: data.sessionId,
     role: data.role,

@@ -46,8 +46,10 @@ export async function GET(request: NextRequest) {
       message: menuItems.length > 0 ? '메뉴를 불러왔습니다' : '메뉴를 자동으로 불러올 수 없습니다. 수동으로 입력해주세요.',
     });
   } catch (error) {
+    console.error('카카오 메뉴 스크래핑 에러:', error);
     return NextResponse.json({
       menuItems: [],
+      warning: '메뉴 스크래핑 중 오류가 발생했습니다',
       message: '메뉴를 자동으로 불러올 수 없습니다. 수동으로 입력해주세요.',
     });
   }

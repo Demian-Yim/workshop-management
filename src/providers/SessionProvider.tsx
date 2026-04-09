@@ -33,6 +33,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         store.setSession({ ...saved, role: 'learner' });
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- run only once on mount to hydrate from storage
   }, []);
 
   const value: SessionContextType = {

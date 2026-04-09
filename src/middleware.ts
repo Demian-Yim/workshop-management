@@ -4,28 +4,37 @@ import type { NextRequest } from 'next/server';
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Admin routes protection: check for auth cookie/token
+  // Admin routes protection: redirect to login if auth cookie absent.
+  // Full Firebase ID-token verification requires Firebase Admin SDK which
+  // cannot run in Edge Runtime; client-side validation in DashboardLayout
+  // performs the authoritative check. This middleware provides a first-pass
+  // redirect to avoid a flash of the protected UI for unauthenticated users.
   if (pathname.startsWith('/dashboard')) {
     const authToken = request.cookies.get('auth-token')?.value;
-
-    // In production, verify the Firebase ID token server-side
-    // For now, the auth guard is handled client-side in the dashboard layout
-    // This middleware can be enhanced with Firebase Admin SDK verification
+    if (!authToken) {
+      const loginUrl = new URL('/login', request.url);
+      loginUrl.searchParams.set('redirect', pathname);
+      return NextResponse.redirect(loginUrl);
+    }
   }
 
-  // Facilitator routes: ensure session context exists
-  if (pathname.startsWith('/present')) {
-    // Session validation handled client-side via SessionProvider
+  // Facilitator /create route: require auth cookie before session creation.
+  // Prevents anonymous session spam while keeping the Edge-compatible check.
+  if (pathname === '/create') {
+    const authToken = request.cookies.get('auth-token')?.value;
+    if (!authToken) {
+      const loginUrl = new URL('/login', request.url);
+      loginUrl.searchParams.set('redirect', pathname);
+      return NextResponse.redirect(loginUrl);
+    }
   }
 
-  // Learner routes: ensure session is joined
-  if (pathname.startsWith('/session')) {
-    // Session validation handled client-side via SessionProvider
-  }
+  // /present and /session routes: session context validated client-side via
+  // SessionProvider (Zustand store in localStorage is not accessible here).
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/present/:path*', '/session/:path*'],
+  matcher: ['/dashboard/:path*', '/create', '/present/:path*', '/session/:path*'],
 };

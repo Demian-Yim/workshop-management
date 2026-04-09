@@ -10,9 +10,10 @@ import Button from '@/components/ui/button';
 import { SkeletonList } from '@/components/ui/skeleton';
 import type { CourseReview } from '@/types/review';
 import { toast } from '@/components/ui/toast';
+import FeatureClosed from '@/components/ui/feature-closed';
 
 export default function ReviewPage() {
-  const { courseId, sessionId, participantId, participantName } = useSessionStore();
+  const { courseId, sessionId, participantId, participantName, sessionData } = useSessionStore();
   const basePath = courseId && sessionId ? `courses/${courseId}/sessions/${sessionId}` : '';
 
   const [content, setContent] = useState('');
@@ -59,6 +60,10 @@ export default function ReviewPage() {
     }
     setSaving(false);
   };
+
+  if (sessionData && sessionData.settings?.reviewOpen === false) {
+    return <FeatureClosed message="강사가 강의후기를 아직 열지 않았습니다" />;
+  }
 
   if (myReviewLoading) {
     return <SkeletonList count={2} />;

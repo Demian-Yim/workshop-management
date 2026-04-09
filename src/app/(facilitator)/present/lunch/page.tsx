@@ -72,7 +72,12 @@ export default function FacilitatorLunchPage() {
 
   const togglePoll = async () => {
     if (!basePath || !poll) return;
-    await updateDoc(doc(db, `${basePath}/lunchPoll`, 'current'), { isOpen: !poll.isOpen });
+    try {
+      await updateDoc(doc(db, `${basePath}/lunchPoll`, 'current'), { isOpen: !poll.isOpen });
+    } catch (err) {
+      console.error('투표 상태 변경 실패:', err);
+      toast.error('투표 상태 변경에 실패했습니다');
+    }
   };
 
   const handleAddRestaurant = async (place: KakaoPlaceResult) => {
