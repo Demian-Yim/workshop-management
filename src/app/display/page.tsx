@@ -66,11 +66,11 @@ function DisplayContent() {
 
   if (!courseId || !sessionId) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="bg-ambient bg-noise min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <Monitor className="w-16 h-16 text-slate-600 mx-auto mb-4" />
-          <p className="text-xl text-slate-500">세션 정보가 없습니다</p>
-          <p className="text-sm text-slate-600 mt-2">강사 대시보드에서 프로젝션 보기를 사용해주세요</p>
+          <Monitor className="w-16 h-16 text-white/20 mx-auto mb-4" />
+          <p className="text-xl text-white/50">세션 정보가 없습니다</p>
+          <p className="text-sm text-white/30 mt-2">강사 대시보드에서 프로젝션 보기를 사용해주세요</p>
         </div>
       </div>
     );
@@ -78,49 +78,55 @@ function DisplayContent() {
 
   if (sessionLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="bg-ambient bg-noise min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="w-12 h-12 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-slate-500">연결 중...</p>
+          <div className="w-12 h-12 border-4 border-indigo-500/30 border-t-indigo-500 rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-white/40">연결 중...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen p-8">
+    <div className="bg-ambient bg-noise min-h-screen p-8 relative overflow-hidden">
+      {/* Ambient blobs */}
+      <div className="pointer-events-none absolute -top-40 -left-40 w-96 h-96 rounded-full opacity-10" style={{ background: 'radial-gradient(circle, #6366f1, transparent 70%)', filter: 'blur(80px)' }} />
+      <div className="pointer-events-none absolute top-1/2 -right-40 w-80 h-80 rounded-full opacity-10" style={{ background: 'radial-gradient(circle, #a855f7, transparent 70%)', filter: 'blur(80px)' }} />
+
       {/* 상단 바 */}
-      <header className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-bold text-slate-300">
+      <header className="flex items-center justify-between mb-8 relative z-10">
+        <h1 className="text-2xl font-bold text-white/70">
           {session?.title || '워크샵'}
         </h1>
-        <div className="flex items-center gap-4">
-          <span className="text-sm text-slate-500">
+        <div className="flex items-center gap-3">
+          <span className="text-xs px-3 py-1 rounded-full border border-white/10 bg-white/5 text-white/40 tracking-widest uppercase">
             {FEATURE_LABELS[activeFeature] || activeFeature}
           </span>
-          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+          <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
         </div>
       </header>
 
       {/* 기능별 뷰 */}
-      {activeFeature === 'welcome' && (
-        <WelcomeView session={session} courseId={courseId} sessionId={sessionId} />
-      )}
-      {activeFeature === 'intro' && (
-        <IntroView basePath={sessionPath} />
-      )}
-      {activeFeature === 'board' && (
-        <BoardView basePath={sessionPath} />
-      )}
-      {activeFeature === 'team' && (
-        <TeamView basePath={sessionPath} />
-      )}
-      {activeFeature === 'review' && (
-        <ReviewView basePath={sessionPath} />
-      )}
-      {activeFeature === 'attendance' && (
-        <AttendanceView basePath={sessionPath} />
-      )}
+      <div className="relative z-10">
+        {activeFeature === 'welcome' && (
+          <WelcomeView session={session} courseId={courseId} sessionId={sessionId} />
+        )}
+        {activeFeature === 'intro' && (
+          <IntroView basePath={sessionPath} />
+        )}
+        {activeFeature === 'board' && (
+          <BoardView basePath={sessionPath} />
+        )}
+        {activeFeature === 'team' && (
+          <TeamView basePath={sessionPath} />
+        )}
+        {activeFeature === 'review' && (
+          <ReviewView basePath={sessionPath} />
+        )}
+        {activeFeature === 'attendance' && (
+          <AttendanceView basePath={sessionPath} />
+        )}
+      </div>
     </div>
   );
 }
@@ -149,32 +155,35 @@ function WelcomeView({
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-10rem)]">
-      <h2 className="text-5xl font-bold text-white mb-2">{session?.title || '워크샵'}</h2>
-      <p className="text-xl text-slate-400 mb-12">FLOW~ : AX Design Lab 사람과 일의 흐름을 디자인합니다</p>
+      <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm text-white/40 text-xs tracking-widest uppercase mb-6 animate-fade-in">
+        실시간 워크샵 플랫폼
+      </div>
+      <h2 className="text-gradient text-6xl font-extrabold tracking-tight mb-3 animate-fade-in">{session?.title || '워크샵'}</h2>
+      <p className="text-white/40 text-lg mb-14 animate-fade-in">FLOW~ : AX Design Lab · 사람과 일의 흐름을 디자인합니다</p>
 
-      <div className="flex items-center gap-16">
+      <div className="flex items-center gap-16 animate-slide-up">
         {/* QR 코드 */}
         {qrUrl && (
           <div className="text-center">
-            <div className="bg-white p-5 rounded-2xl inline-block shadow-xl shadow-blue-500/10">
+            <div className="bg-white p-5 rounded-2xl inline-block shadow-2xl shadow-indigo-500/20 ring-1 ring-white/20">
               <Image src={qrUrl} alt="Join QR" width={288} height={288} className="w-72 h-72" unoptimized />
             </div>
-            <p className="text-slate-500 mt-4 text-sm">QR 코드를 스캔하여 참여하세요</p>
+            <p className="text-white/30 mt-4 text-sm">QR 코드를 스캔하여 참여하세요</p>
           </div>
         )}
 
         {/* 세션 코드 + 참여 현황 */}
         <div className="text-center">
-          <p className="text-slate-500 text-lg mb-3">세션 코드</p>
-          <div className="text-7xl font-mono font-bold text-blue-400 tracking-[0.3em] mb-8">
+          <p className="text-white/40 text-lg mb-3">세션 코드</p>
+          <div className="text-gradient text-8xl font-mono font-extrabold tracking-[0.35em] mb-8 drop-shadow-lg">
             {session?.sessionCode}
           </div>
-          <div className="bg-slate-800/50 rounded-2xl px-12 py-8 border border-slate-700">
+          <div className="rounded-2xl px-12 py-8 border border-white/10 bg-white/5 backdrop-blur-sm">
             <div className="flex items-center gap-3 justify-center">
-              <Users className="w-8 h-8 text-blue-400" />
+              <Users className="w-8 h-8 text-indigo-400" />
               <span className="text-5xl font-bold text-white">{participants.length}</span>
             </div>
-            <p className="text-slate-400 mt-2">명 참여 중</p>
+            <p className="text-white/40 mt-2">명 참여 중</p>
           </div>
         </div>
       </div>
@@ -429,7 +438,7 @@ function AttendanceView({ basePath }: { basePath: string }) {
 function LoadingSpinner() {
   return (
     <div className="flex items-center justify-center py-20">
-      <div className="w-10 h-10 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin" />
+      <div className="w-10 h-10 border-4 border-indigo-500/30 border-t-indigo-500 rounded-full animate-spin" />
     </div>
   );
 }
@@ -437,9 +446,9 @@ function LoadingSpinner() {
 function EmptyDisplay({ icon: Icon, text }: { icon: React.ComponentType<{ className?: string }>; text: string }) {
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-14rem)]">
-      <Icon className="w-20 h-20 text-slate-700 mb-6" />
-      <p className="text-2xl text-slate-500">{text}</p>
-      <p className="text-base text-slate-600 mt-2">학습자들의 활동이 실시간으로 표시됩니다</p>
+      <Icon className="w-20 h-20 text-white/15 mb-6" />
+      <p className="text-2xl text-white/40">{text}</p>
+      <p className="text-base text-white/25 mt-2">학습자들의 활동이 실시간으로 표시됩니다</p>
     </div>
   );
 }
@@ -449,8 +458,8 @@ export default function DisplayPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="w-12 h-12 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin" />
+        <div className="bg-ambient bg-noise min-h-screen flex items-center justify-center">
+          <div className="w-12 h-12 border-4 border-indigo-500/30 border-t-indigo-500 rounded-full animate-spin" />
         </div>
       }
     >

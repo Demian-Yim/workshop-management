@@ -1,89 +1,235 @@
 @import "tailwindcss";
 
+/* ─────────────────────────────────────────────────────────────
+   Workshop Management Design Tokens
+   Based on collabstage token system (Padlet + AhaSlides inspired).
+───────────────────────────────────────────────────────────── */
+
 :root {
+  /* Brand (indigo-violet) */
+  --brand-500: #6366f1;
+  --brand-600: #4f46e5;
+  --brand-700: #4338ca;
+  --brand-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+  --brand-gradient-soft: linear-gradient(135deg, #eef2ff 0%, #f5f3ff 50%, #fdf2f8 100%);
+
+  /* Legacy primary (blue) — kept for backward compat */
   --primary: #0057FF;
   --primary-light: #3B82F6;
   --primary-dark: #1E3A8A;
   --accent: #F59E0B;
-  --success: #028901;
-  --danger: #D00D00;
-  --warning: #F97C00;
+
+  /* Surfaces */
+  --surface-0: #ffffff;
+  --surface-1: #f8fafc;
+  --surface-2: #f1f5f9;
+  --surface-3: #e2e8f0;
+
+  /* Text */
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --text-inverse: #ffffff;
+
+  /* Legacy text — kept for backward compat */
+  --text: #191919;
+  --text-light: #64748B;
   --bg: #F9F9F9;
   --bg-dark: #0F172A;
   --card: #FFFFFF;
   --card-dark: #1E293B;
-  --text: #191919;
-  --text-light: #64748B;
   --text-dark: #F1F5F9;
   --border: #E2E8F0;
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.08);
+
+  /* Semantic */
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --info: #06b6d4;
+
+  /* Sticky-note accent palette */
+  --accent-yellow: #fef3c7;
+  --accent-pink:   #fce7f3;
+  --accent-blue:   #dbeafe;
+  --accent-green:  #d1fae5;
+  --accent-purple: #ede9fe;
+  --accent-orange: #ffedd5;
+
+  --accent-yellow-ink: #a16207;
+  --accent-pink-ink:   #9d174d;
+  --accent-blue-ink:   #1e40af;
+  --accent-green-ink:  #047857;
+  --accent-purple-ink: #6d28d9;
+  --accent-orange-ink: #c2410c;
+
+  /* Radii — generous, Padlet-like */
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-full: 9999px;
+
+  /* Elevation */
+  --shadow-xs: 0 1px 2px 0 rgb(15 23 42 / 0.04);
+  --shadow-sm: 0 2px 8px -2px rgb(15 23 42 / 0.06), 0 1px 3px -1px rgb(15 23 42 / 0.04);
+  --shadow-md: 0 8px 24px -8px rgb(15 23 42 / 0.12), 0 2px 6px -2px rgb(15 23 42 / 0.06);
+  --shadow-lg: 0 20px 48px -12px rgb(79 70 229 / 0.18), 0 4px 12px -2px rgb(15 23 42 / 0.08);
+  --shadow-brand: 0 10px 32px -8px rgb(99 102 241 / 0.35);
   --shadow-card: 0 1px 10px rgba(0,0,0,0.06);
   --shadow-blue: 0 1px 4px rgba(0,87,255,0.15);
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-fast: 150ms;
+  --dur-normal: 250ms;
+  --dur-slow: 400ms;
 }
 
-body {
+@theme inline {
+  --color-background: var(--surface-0);
+  --color-foreground: var(--text-primary);
+  --color-brand: var(--brand-500);
+  --color-brand-600: var(--brand-600);
+  --color-brand-700: var(--brand-700);
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --color-info: var(--info);
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+}
+
+html, body {
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Roboto, sans-serif;
-  background: var(--bg);
-  color: var(--text);
+  background: var(--surface-0);
+  color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
-/* Scrollbar */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 3px; }
+/* Focus ring */
+:focus-visible {
+  outline: 2px solid var(--brand-500);
+  outline-offset: 2px;
+  border-radius: var(--radius-xs);
+}
 
-/* Animations */
+/* Selection */
+::selection {
+  background-color: color-mix(in srgb, var(--brand-500) 22%, transparent);
+  color: var(--text-primary);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Keyframes & motion utilities
+───────────────────────────────────────────────────────────── */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+  to   { opacity: 1; transform: translateY(0); }
 }
-
 @keyframes slideUp {
   from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  to   { opacity: 1; transform: translateY(0); }
 }
-
-@keyframes pulse-ring {
-  0% { transform: scale(0.8); opacity: 1; }
-  100% { transform: scale(2); opacity: 0; }
-}
-
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-
-@keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.9); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-@keyframes heartBounce {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.3); }
-}
-
 @keyframes slideDown {
   from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+  to   { opacity: 1; transform: translateY(0); }
 }
-
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes pulse-ring {
+  0%   { box-shadow: 0 0 0 0 rgb(99 102 241 / 0.45); }
+  70%  { box-shadow: 0 0 0 12px rgb(99 102 241 / 0); }
+  100% { box-shadow: 0 0 0 0 rgb(99 102 241 / 0); }
+}
+@keyframes shimmer {
+  from { background-position: -200% 0; }
+  to   { background-position: 200% 0; }
+}
+@keyframes heartBounce {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.3); }
+}
 @keyframes checkmark {
-  0% { stroke-dashoffset: 20; }
+  0%   { stroke-dashoffset: 20; }
   100% { stroke-dashoffset: 0; }
 }
+@keyframes wordFadeIn {
+  from { opacity: 0; transform: scale(0.7) rotate(-4deg); }
+  to   { opacity: 1; transform: scale(1) rotate(0deg); }
+}
 
-.animate-fade-in { animation: fadeIn 0.3s ease-out; }
-.animate-slide-up { animation: slideUp 0.4s ease-out; }
-.animate-pulse-ring { animation: pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite; }
-.animate-shimmer { animation: shimmer 1.5s infinite; background-size: 200% 100%; }
-.animate-scale-in { animation: scaleIn 0.2s ease-out; }
+.animate-fade-in      { animation: fadeIn 0.3s ease-out; }
+.animate-slide-up     { animation: slideUp 0.4s ease-out; }
+.animate-slide-down   { animation: slideDown 0.2s ease-out; }
+.animate-scale-in     { animation: scaleIn 0.2s var(--ease-spring); }
+.animate-pulse-ring   { animation: pulse-ring 2s var(--ease-out) infinite; }
+.animate-shimmer      { animation: shimmer 1.5s infinite; background-size: 200% 100%; }
 .animate-heart-bounce { animation: heartBounce 0.3s ease-in-out; }
-.animate-slide-down { animation: slideDown 0.2s ease-out; }
 
-/* Masonry Board */
+/* ─────────────────────────────────────────────────────────────
+   Brand gradient utilities
+───────────────────────────────────────────────────────────── */
+.bg-brand-gradient {
+  background-image: var(--brand-gradient);
+  background-color: var(--brand-500);
+}
+.bg-brand-gradient-soft {
+  background-image: var(--brand-gradient-soft);
+}
+.text-gradient {
+  background-image: var(--brand-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.bg-ambient {
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 0%,  rgb(99 102 241 / 0.12), transparent 60%),
+    radial-gradient(ellipse 70% 50% at 100% 30%, rgb(236 72 153 / 0.10), transparent 60%),
+    radial-gradient(ellipse 60% 60% at 50% 100%, rgb(168 85 247 / 0.10), transparent 60%),
+    var(--surface-0);
+}
+.bg-noise::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='a'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23a)'/%3E%3C/svg%3E");
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Scrollbar
+───────────────────────────────────────────────────────────── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--surface-3) transparent;
+}
+*::-webkit-scrollbar { width: 6px; height: 6px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb {
+  background: var(--surface-3);
+  border-radius: var(--radius-full);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+*::-webkit-scrollbar-thumb:hover { background: #cbd5e1; background-clip: padding-box; }
+
+/* ─────────────────────────────────────────────────────────────
+   Workshop-specific utilities
+───────────────────────────────────────────────────────────── */
 .masonry-grid {
   display: flex;
   margin-left: -16px;
@@ -94,16 +240,20 @@ body {
   background-clip: padding-box;
 }
 
-/* Presentation mode */
 .present-mode {
   background: var(--bg-dark);
   color: var(--text-dark);
   min-height: 100vh;
 }
 
-/* Toast */
 .toast-enter { animation: slideUp 0.3s ease-out; }
 
-/* Star rating */
 .star-rating button { transition: transform 0.1s; }
 .star-rating button:hover { transform: scale(1.2); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

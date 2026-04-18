@@ -1,12 +1,12 @@
 'use client';
 
 import { useMemo } from 'react';
-import { orderBy } from 'firebase/firestore';
+import { orderBy, where } from 'firebase/firestore';
 import { useRealtimeCollection } from './useRealtimeCollection';
 import { useSessionStore } from './useSession';
-import type { Post } from '@/types/board';
+import type { Post, BoardSection } from '@/types/board';
 
-export function usePosts(sortBy: 'newest' | 'popular' = 'newest') {
+export function usePosts(sortBy: 'newest' | 'popular' = 'newest', sectionId?: string | null) {
   const { courseId, sessionId } = useSessionStore();
 
   const path =
@@ -14,13 +14,13 @@ export function usePosts(sortBy: 'newest' | 'popular' = 'newest') {
       ? `courses/${courseId}/sessions/${sessionId}/posts`
       : '';
 
-  const constraints = useMemo(
-    () =>
-      sortBy === 'popular'
-        ? [orderBy('likeCount', 'desc')]
-        : [orderBy('createdAt', 'desc')],
-    [sortBy]
-  );
+  const constraints = useMemo(() => {
+    const base = sortBy === 'popular'
+      ? [orderBy('likeCount', 'desc')]
+      : [orderBy('createdAt', 'desc')];
+    if (sectionId) return [where('sectionId', '==', sectionId), ...base];
+    return base;
+  }, [sortBy, sectionId]);
 
   const { data, loading, error } = useRealtimeCollection<Post>(
     path,
@@ -30,4 +30,23 @@ export function usePosts(sortBy: 'newest' | 'popular' = 'newest') {
   );
 
   return { posts: data, loading, error };
+}
+
+export function useBoardSections() {
+  const { courseId, sessionId } = useSessionStore();
+
+  const path =
+    courseId && sessionId
+      ? `courses/${courseId}/sessions/${sessionId}/boardSections`
+      : '';
+
+  const constraints = useMemo(() => [orderBy('orderIndex', 'asc')], []);
+
+  const { data, loading, error } = useRealtimeCollection<BoardSection>(
+    path,
+    constraints,
+    !!path
+  );
+
+  return { sections: data, loading, error };
 }

@@ -33,6 +33,8 @@ export interface Restaurant {
   latitude: number;
   longitude: number;
   placeUrl: string;
+  categoryName?: string;   // e.g. "음식점 > 한식"
+  distance?: string;       // distance in meters from search location
   menuItems: MenuItem[];
   addedBy: string;
   createdAt: Timestamp;

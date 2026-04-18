@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils';
 import { ButtonHTMLAttributes, forwardRef } from 'react';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'danger' | 'ghost' | 'admin';
+  variant?: 'primary' | 'brand' | 'secondary' | 'danger' | 'ghost' | 'admin';
   size?: 'sm' | 'md' | 'lg';
   loading?: boolean;
 }
@@ -11,16 +11,17 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = 'primary', size = 'md', loading, children, disabled, ...props }, ref) => {
     const variants = {
-      primary: 'bg-blue-600 hover:bg-blue-700 text-white shadow-sm',
+      primary: 'bg-[var(--brand-500)] hover:bg-[var(--brand-600)] text-white shadow-[var(--shadow-sm)] hover:shadow-[var(--shadow-brand)]',
+      brand: 'bg-brand-gradient text-white shadow-[var(--shadow-brand)] hover:opacity-90',
       secondary: 'bg-slate-100 hover:bg-slate-200 text-slate-700',
       danger: 'bg-red-600 hover:bg-red-700 text-white',
       ghost: 'hover:bg-slate-100 text-slate-600',
-      admin: 'bg-purple-600 hover:bg-purple-700 text-white shadow-sm',
+      admin: 'bg-purple-600 hover:bg-purple-700 text-white shadow-[var(--shadow-sm)]',
     };
     const sizes = {
-      sm: 'px-3 py-1.5 text-xs rounded-md',
-      md: 'px-4 py-2 text-sm rounded-lg',
-      lg: 'px-6 py-3 text-base rounded-lg',
+      sm: 'px-3 py-1.5 text-xs rounded-[var(--radius-sm)]',
+      md: 'px-4 py-2 text-sm rounded-[var(--radius-md)]',
+      lg: 'px-6 py-3 text-base rounded-[var(--radius-lg)]',
     };
 
     return (

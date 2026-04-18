@@ -1,6 +1,7 @@
-﻿'use client';
+'use client';
 
 import { useState } from 'react';
+import { MapPin } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useKakaoSearch } from '@/hooks/useKakaoSearch';
 import Input from '@/components/ui/input';
@@ -9,6 +10,20 @@ import type { KakaoPlaceResult } from '@/types/restaurant';
 interface RestaurantSearchProps {
   onSelect: (place: KakaoPlaceResult) => void;
   className?: string;
+}
+
+/** 카카오 category_name에서 마지막 세그먼트만 반환 */
+function parseCategory(categoryName: string): string {
+  const parts = categoryName.split(' > ');
+  return parts[parts.length - 1] ?? categoryName;
+}
+
+/** 미터 거리 문자열을 표시용 문자열로 변환 (> 999m → "X.Xkm") */
+function formatDistance(distance: string): string {
+  const meters = parseInt(distance, 10);
+  if (isNaN(meters)) return `${distance}m`;
+  if (meters > 999) return `${(meters / 1000).toFixed(1)}km`;
+  return `${meters}m`;
 }
 
 export default function RestaurantSearch({ onSelect, className }: RestaurantSearchProps) {
@@ -64,15 +79,20 @@ export default function RestaurantSearch({ onSelect, className }: RestaurantSear
                 <p className="text-xs text-slate-500 mt-0.5">
                   {place.road_address_name || place.address_name}
                 </p>
-                <div className="flex items-center gap-2 mt-1">
+                <div className="flex items-center gap-2 mt-1 flex-wrap">
                   {place.category_name && (
-                    <span className="text-xs text-blue-600">{place.category_name}</span>
+                    <span className="text-xs text-blue-600">
+                      {parseCategory(place.category_name)}
+                    </span>
                   )}
                   {place.phone && (
                     <span className="text-xs text-slate-400">{place.phone}</span>
                   )}
                   {place.distance && (
-                    <span className="text-xs text-slate-400">{place.distance}m</span>
+                    <span className="flex items-center gap-0.5 text-xs text-slate-400">
+                      <MapPin className="w-3 h-3" aria-hidden="true" />
+                      {formatDistance(place.distance)}
+                    </span>
                   )}
                 </div>
               </button>

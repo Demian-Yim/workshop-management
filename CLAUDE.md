@@ -87,3 +87,16 @@ NEXT_PUBLIC_FIREBASE_APP_ID=
 - Firebase 설정 값은 `.env.local`에만 저장, 코드에 하드코딩 금지
 - Firestore 규칙은 역할별 권한을 명시적으로 정의한다
 - 민감 정보가 포함된 파일은 커밋 전 반드시 확인
+
+## IMPLEMENTATION
+
+> 상세 구현 계획: [IMPLEMENTATION.md](./IMPLEMENTATION.md)
+>
+> 현재 단계: Phase 1 — Board Padlet급 업그레이드 (팀 칼럼 + 섹션 + 댓글)
+>
+> 통합 목표: Padlet + Slido + AhaSlides 대체 원스톱 플랫폼
+> - Phase 1: Board → 팀 칼럼 레이아웃 + 섹션 + 댓글
+> - Phase 2: collabstage 이식 (Poll, Q&A, WordCloud)
+> - Phase 3: marble-roulette + break-timer 통합
+> - Phase 4: 디자인 시스템 오버홀
+> - Phase 5: Kakao MCP + K Skill 고도화

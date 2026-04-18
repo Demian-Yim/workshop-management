@@ -1,19 +1,33 @@
 'use client';
 import { cn } from '@/lib/utils';
-import { HTMLAttributes } from 'react';
+import { HTMLAttributes, CSSProperties } from 'react';
 
 interface CardProps extends HTMLAttributes<HTMLDivElement> {
   hoverable?: boolean;
+  variant?: 'default' | 'brand' | 'soft';
+  bgImage?: string;
 }
 
-export function Card({ className, hoverable, children, ...props }: CardProps) {
+export function Card({ className, hoverable, variant = 'default', bgImage, style, children, ...props }: CardProps) {
+  const variants = {
+    default: 'bg-white border border-slate-200 shadow-[var(--shadow-sm)]',
+    brand: 'bg-brand-gradient border-0 text-white shadow-[var(--shadow-brand)]',
+    soft: 'bg-brand-gradient-soft border border-indigo-100 shadow-[var(--shadow-sm)]',
+  };
+
+  const bgStyle: CSSProperties = bgImage
+    ? { backgroundImage: `url(${bgImage})`, backgroundSize: 'cover', backgroundPosition: 'center', ...style }
+    : style ?? {};
+
   return (
     <div
       className={cn(
-        'bg-white rounded-xl shadow-[var(--shadow-card)] border border-slate-200 overflow-hidden',
-        hoverable && 'hover:shadow-md hover:border-slate-300 transition-all duration-200',
+        'rounded-[var(--radius-lg)] overflow-hidden',
+        variants[variant],
+        hoverable && 'hover:shadow-[var(--shadow-md)] hover:border-slate-300 transition-all duration-200 cursor-pointer',
         className
       )}
+      style={bgStyle}
       {...props}
     >
       {children}
