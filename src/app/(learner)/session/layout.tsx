@@ -1,7 +1,7 @@
 ﻿'use client';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Home, MessageSquare, UtensilsCrossed, Bell, BarChart3, LogOut } from 'lucide-react';
+import { Home, MessageSquare, UtensilsCrossed, Bell, BarChart3, LogOut, Zap } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { useSessionStore, useSessionHydrated } from '@/hooks/useSession';
 import { useRealtimeDocument } from '@/hooks/useRealtimeDocument';
@@ -25,6 +25,7 @@ const navItems: NavItem[] = [
   { href: '/session/lunch', label: '점심', icon: UtensilsCrossed },
   { href: '/session/announcements', label: '공지', icon: Bell },
   { href: '/session/survey', label: '설문', icon: BarChart3 },
+  { href: '/session/activities', label: '활동', icon: Zap },
 ];
 
 export default function LearnerSessionLayout({ children }: { children: React.ReactNode }) {

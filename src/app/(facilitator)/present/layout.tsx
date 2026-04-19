@@ -12,6 +12,7 @@ import {
   PenLine,
   BarChart3,
   Monitor,
+  Zap,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { useSessionStore } from '@/hooks/useSession';
@@ -36,6 +37,7 @@ const features: FeatureItem[] = [
   { href: '/present/lunch', label: '점심', icon: UtensilsCrossed },
   { href: '/present/review', label: '후기', icon: PenLine },
   { href: '/present/survey', label: '설문', icon: BarChart3 },
+  { href: '/present/activities', label: '라이브 활동', icon: Zap },
 ];
 
 export default function PresentLayout({ children }: { children: React.ReactNode }) {

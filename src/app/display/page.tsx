@@ -20,6 +20,10 @@ import {
   Users, MessageSquare, UserPlus, Star,
   CheckCircle, Monitor,
 } from 'lucide-react';
+import { useActivities } from '@/hooks/useActivities';
+import PollView from '@/components/engagement/PollView';
+import QAView from '@/components/engagement/QAView';
+import WordCloudView from '@/components/engagement/WordCloudView';
 
 /** activeFeature 값과 표시 이름 매핑 */
 const FEATURE_LABELS: Record<string, string> = {
@@ -29,6 +33,7 @@ const FEATURE_LABELS: Record<string, string> = {
   team: '팀 구성',
   review: '강의후기',
   attendance: '출석',
+  activity: '라이브 활동',
 };
 
 function DisplayContent() {
@@ -125,6 +130,9 @@ function DisplayContent() {
         )}
         {activeFeature === 'attendance' && (
           <AttendanceView basePath={sessionPath} />
+        )}
+        {activeFeature === 'activity' && (
+          <ActivityView />
         )}
       </div>
     </div>
@@ -430,6 +438,39 @@ function AttendanceView({ basePath }: { basePath: string }) {
           </div>
         ))}
       </div>
+    </div>
+  );
+}
+
+/* ────────────────────────── Activity View ────────────────────────── */
+function ActivityView() {
+  const { activeActivity, loading } = useActivities();
+
+  if (loading) return <LoadingSpinner />;
+  if (!activeActivity) {
+    return (
+      <EmptyDisplay
+        icon={Monitor}
+        text="활성화된 활동이 없습니다"
+      />
+    );
+  }
+
+  return (
+    <div className="max-w-3xl mx-auto">
+      <h2 className="text-3xl font-bold text-white text-center mb-8">{activeActivity.title}</h2>
+      {activeActivity.prompt && (
+        <p className="text-slate-300 text-center mb-8 text-lg">{activeActivity.prompt}</p>
+      )}
+      {activeActivity.type === 'poll' && (
+        <PollView activity={activeActivity} participantId="display" isPresenter dark />
+      )}
+      {activeActivity.type === 'qa' && (
+        <QAView activity={activeActivity} participantId="display" participantName="디스플레이" isPresenter dark />
+      )}
+      {activeActivity.type === 'wordcloud' && (
+        <WordCloudView activity={activeActivity} participantId="display" isPresenter dark />
+      )}
     </div>
   );
 }
