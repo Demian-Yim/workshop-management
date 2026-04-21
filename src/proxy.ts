@@ -1,7 +1,9 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-export function middleware(request: NextRequest) {
+// Next.js 16: proxy.ts replaces middleware.ts; export function must be named "proxy"
+
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Admin routes protection: redirect to login if auth cookie absent.

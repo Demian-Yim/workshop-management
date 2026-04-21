@@ -1,13 +1,14 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { signIn, signInWithGoogle } from '@/lib/firebase/auth';
+import { signIn, signInWithGoogle, resetPassword } from '@/lib/firebase/auth';
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [resetSent, setResetSent] = useState(false);
   const router = useRouter();
 
   const handleEmailLogin = async (e: React.FormEvent) => {
@@ -23,6 +24,22 @@ export default function AdminLoginPage() {
       router.push('/dashboard');
     } catch {
       setError('이메일 또는 비밀번호가 올바르지 않습니다');
+    }
+    setLoading(false);
+  };
+
+  const handleResetPassword = async () => {
+    if (!email.trim()) {
+      setError('비밀번호 재설정을 위해 이메일을 먼저 입력하세요');
+      return;
+    }
+    setLoading(true);
+    setError('');
+    try {
+      await resetPassword(email.trim());
+      setResetSent(true);
+    } catch {
+      setError('비밀번호 재설정 이메일 전송에 실패했습니다');
     }
     setLoading(false);
   };
@@ -78,6 +95,11 @@ export default function AdminLoginPage() {
               {error}
             </div>
           )}
+          {resetSent && (
+            <div className="mb-4 px-4 py-3 bg-green-50 border-l-4 border-green-500 text-green-700 text-sm">
+              비밀번호 재설정 이메일을 전송했습니다. 받은편지함을 확인하세요.
+            </div>
+          )}
 
           <form onSubmit={handleEmailLogin} className="space-y-4">
             <div>
@@ -117,6 +139,17 @@ export default function AdminLoginPage() {
               </button>
             </div>
           </form>
+
+          <div className="mt-3 text-center">
+            <button
+              type="button"
+              onClick={handleResetPassword}
+              disabled={loading}
+              className="text-xs text-neutral-400 hover:text-neutral-700 underline transition-colors disabled:opacity-40"
+            >
+              비밀번호를 잊으셨나요?
+            </button>
+          </div>
 
           <div className="mt-6">
             <div className="flex items-center gap-4 mb-6">

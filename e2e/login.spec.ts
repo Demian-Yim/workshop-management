@@ -35,7 +35,7 @@ test.describe('관리자 로그인 페이지', () => {
 
     // 로그인 중... 텍스트가 표시되었다가 에러 메시지로 전환됨
     await expect(
-      page.getByText(/실패/)
+      page.getByText(/올바르지 않습니다/)
     ).toBeVisible({ timeout: 30000 });
   });
 
