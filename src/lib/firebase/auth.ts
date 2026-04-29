@@ -8,7 +8,8 @@ import {
   sendPasswordResetEmail,
   User,
 } from 'firebase/auth';
-import { auth } from './config';
+import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { auth, db } from './config';
 
 const googleProvider = new GoogleAuthProvider();
 
@@ -41,8 +42,59 @@ export async function handleGoogleRedirectResult() {
   if (credential) {
     const token = await credential.user.getIdToken();
     setAuthCookie(token);
+    await ensureUserRegistered(credential.user);
   }
   return credential;
+}
+
+/**
+ * On first Google sign-in, register user into pendingUsers unless already
+ * an admin or already approved in users/{uid}.
+ */
+export async function ensureUserRegistered(user: User) {
+  const adminRef = doc(db, 'admins', user.uid);
+  const adminSnap = await getDoc(adminRef);
+  if (adminSnap.exists()) return; // already an admin, no action needed
+
+  const userRef = doc(db, 'users', user.uid);
+  const userSnap = await getDoc(userRef);
+  if (userSnap.exists()) return; // already registered/approved
+
+  const pendingRef = doc(db, 'pendingUsers', user.uid);
+  const pendingSnap = await getDoc(pendingRef);
+  if (!pendingSnap.exists()) {
+    await setDoc(pendingRef, {
+      uid: user.uid,
+      displayName: user.displayName ?? '',
+      email: user.email ?? '',
+      photoURL: user.photoURL ?? '',
+      requestedAt: serverTimestamp(),
+      status: 'pending',
+    });
+  }
+}
+
+/** Check admin status in Firestore */
+export async function checkIsAdmin(uid: string): Promise<boolean> {
+  const snap = await getDoc(doc(db, 'admins', uid));
+  return snap.exists();
+}
+
+/** Check approved user status */
+export async function checkIsApproved(uid: string): Promise<'admin' | 'approved' | 'pending' | 'none'> {
+  const adminSnap = await getDoc(doc(db, 'admins', uid));
+  if (adminSnap.exists()) return 'admin';
+
+  const userSnap = await getDoc(doc(db, 'users', uid));
+  if (userSnap.exists()) {
+    const data = userSnap.data();
+    return data.approved ? 'approved' : 'pending';
+  }
+
+  const pendingSnap = await getDoc(doc(db, 'pendingUsers', uid));
+  if (pendingSnap.exists()) return 'pending';
+
+  return 'none';
 }
 
 export async function signOut() {

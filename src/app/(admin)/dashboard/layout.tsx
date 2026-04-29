@@ -1,9 +1,10 @@
-﻿'use client';
+'use client';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { LayoutDashboard, BookOpen, Users, BarChart3 } from 'lucide-react';
+import { LayoutDashboard, BookOpen, Users, BarChart3, UserCheck } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
+import { useAuthContext } from '@/providers/AuthProvider';
 import { signOut } from '@/lib/firebase/auth';
 import { useRouter } from 'next/navigation';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -18,12 +19,14 @@ const navItems: NavItem[] = [
   { href: '/dashboard', label: '대시보드', icon: LayoutDashboard },
   { href: '/dashboard/courses', label: '교육과정', icon: BookOpen },
   { href: '/dashboard/facilitators', label: '강사 관리', icon: Users },
+  { href: '/dashboard/approvals', label: '사용자 승인', icon: UserCheck },
   { href: '/dashboard/reports', label: '리포트', icon: BarChart3 },
 ];
 
 export default function AdminDashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { user, loading } = useAuth();
+  const { isAdmin, role } = useAuthContext();
   const router = useRouter();
 
   if (loading) return (
@@ -35,7 +38,36 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
       </div>
     </div>
   );
+
   if (!user) { router.push('/login'); return null; }
+
+  // Non-admin authenticated user → show pending/access denied screen
+  if (role !== null && !isAdmin) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-10 text-center max-w-sm">
+          <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <UserCheck className="w-8 h-8 text-amber-500" />
+          </div>
+          <h2 className="text-xl font-bold text-slate-900 mb-2">
+            {role === 'pending' ? '승인 대기 중' : '접근 권한 없음'}
+          </h2>
+          <p className="text-slate-500 text-sm">
+            {role === 'pending'
+              ? '관리자의 승인이 완료되면 사용할 수 있습니다. 잠시만 기다려주세요.'
+              : '이 계정은 대시보드 접근 권한이 없습니다. 관리자에게 문의하세요.'}
+          </p>
+          <p className="text-xs text-slate-400 mt-3">{user.email}</p>
+          <button
+            onClick={async () => { await signOut(); router.push('/login'); }}
+            className="mt-6 text-sm text-slate-400 hover:text-red-500 transition"
+          >
+            로그아웃
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   const handleSignOut = async () => {
     await signOut();

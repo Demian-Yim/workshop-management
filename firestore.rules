@@ -153,5 +153,18 @@ service cloud.firestore {
       allow read: if isAuthenticated();
       allow write: if isAdmin();
     }
+
+    // ── 승인 대기 사용자: 본인만 생성, 관리자만 읽기/삭제 ──
+    match /pendingUsers/{uid} {
+      allow read: if isAdmin() || (isAuthenticated() && request.auth.uid == uid);
+      allow create: if isAuthenticated() && request.auth.uid == uid;
+      allow delete: if isAdmin();
+    }
+
+    // ── 승인된 사용자: 관리자가 생성/삭제, 본인도 읽기 가능 ──
+    match /users/{uid} {
+      allow read: if isAdmin() || (isAuthenticated() && request.auth.uid == uid);
+      allow write: if isAdmin();
+    }
   }
 }
