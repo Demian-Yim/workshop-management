@@ -1,7 +1,7 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { signIn, signInWithGoogle, resetPassword } from '@/lib/firebase/auth';
+import { signIn, signInWithGoogle, handleGoogleRedirectResult, resetPassword } from '@/lib/firebase/auth';
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState('');
@@ -10,6 +10,17 @@ export default function AdminLoginPage() {
   const [loading, setLoading] = useState(false);
   const [resetSent, setResetSent] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    handleGoogleRedirectResult()
+      .then((credential) => {
+        if (credential) router.push('/dashboard');
+      })
+      .catch(() => {
+        setError('Google 로그인에 실패했습니다. 다시 시도해주세요.');
+        setLoading(false);
+      });
+  }, [router]);
 
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,13 +58,7 @@ export default function AdminLoginPage() {
   const handleGoogleLogin = async () => {
     setLoading(true);
     setError('');
-    try {
-      await signInWithGoogle();
-      router.push('/dashboard');
-    } catch {
-      setError('Google 로그인에 실패했습니다. 다시 시도해주세요.');
-    }
-    setLoading(false);
+    await signInWithGoogle();
   };
 
   return (
