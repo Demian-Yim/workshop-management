@@ -57,6 +57,41 @@ service cloud.firestore {
           allow read: if true;
           allow create, update: if true;
           allow delete: if isAuthenticated();
+
+          // 댓글: 참가자가 작성, 삭제는 인증 사용자만
+          match /comments/{commentId} {
+            allow read: if true;
+            allow create, update: if true;
+            allow delete: if isAuthenticated();
+          }
+        }
+
+        // 보드 섹션: 누구나 읽기, 생성/수정은 인증 사용자
+        match /boardSections/{sectionId} {
+          allow read: if true;
+          allow write: if isAuthenticated();
+        }
+
+        // 라이브 활동 (Poll, Q&A, WordCloud)
+        match /activities/{activityId} {
+          allow read: if true;
+          allow write: if isAuthenticated();
+
+          match /votes/{voteId} {
+            allow read: if true;
+            allow create: if true;
+            allow delete: if isAuthenticated();
+          }
+          match /questions/{questionId} {
+            allow read: if true;
+            allow create, update: if true;
+            allow delete: if isAuthenticated();
+          }
+          match /words/{wordId} {
+            allow read: if true;
+            allow create: if true;
+            allow delete: if isAuthenticated();
+          }
         }
 
         // 공지: 누구나 읽기, 생성/수정은 인증 사용자

@@ -1,19 +1,23 @@
-﻿'use client';
+'use client';
 import { useState } from 'react';
-import { ClipboardList, Heart } from 'lucide-react';
+import { ClipboardList } from 'lucide-react';
 import { useSessionStore } from '@/hooks/useSession';
 import { usePosts } from '@/hooks/usePosts';
+import { useTeams } from '@/hooks/useTeams';
+import PostBoard from '@/components/board/PostBoard';
+import CommentPanel from '@/components/board/CommentPanel';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
 import { SkeletonList } from '@/components/ui/skeleton';
 import EmptyState from '@/components/ui/empty-state';
-import Masonry from 'react-masonry-css';
 import { toast } from '@/components/ui/toast';
 
 export default function FacilitatorBoardPage() {
   const { courseId, sessionId, sessionData } = useSessionStore();
   const [sortBy, setSortBy] = useState<'newest' | 'popular'>('newest');
   const { posts, loading } = usePosts(sortBy);
+  const { teams } = useTeams();
+  const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
   const basePath = courseId && sessionId ? `courses/${courseId}/sessions/${sessionId}` : '';
 
   const toggleBoard = async () => {
@@ -57,27 +61,19 @@ export default function FacilitatorBoardPage() {
       ) : posts.length === 0 ? (
         <EmptyState icon={ClipboardList} title="아직 게시글이 없습니다" dark />
       ) : (
-        <Masonry
-          breakpointCols={{ default: 4, 1280: 3, 1024: 2 }}
-          className="masonry-grid"
-          columnClassName="masonry-grid_column"
-        >
-          {posts.map((post) => (
-            <div key={post.id} className="bg-slate-800 rounded-xl p-5 border border-slate-700 mb-4 animate-fade-in">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-8 h-8 bg-blue-500/20 rounded-full flex items-center justify-center text-sm font-bold text-blue-300">
-                  {post.authorName[0]}
-                </div>
-                <span className="text-sm font-medium text-slate-300">{post.authorName}</span>
-              </div>
-              <p className="text-slate-200 whitespace-pre-wrap leading-relaxed">{post.content}</p>
-              <div className="flex items-center gap-2 mt-3 text-sm text-slate-500">
-                <span className="flex items-center gap-1"><Heart className="w-3.5 h-3.5 text-rose-400" />{post.likeCount || 0}</span>
-              </div>
-            </div>
-          ))}
-        </Masonry>
+        <PostBoard
+          posts={posts}
+          teams={teams}
+          onOpenComments={(postId) => setSelectedPostId(postId)}
+          showViewToggle
+          dark
+        />
       )}
+
+      <CommentPanel
+        postId={selectedPostId}
+        onClose={() => setSelectedPostId(null)}
+      />
     </div>
   );
 }

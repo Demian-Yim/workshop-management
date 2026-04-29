@@ -1,15 +1,16 @@
-﻿'use client';
+'use client';
 import { useState } from 'react';
 import { collection, addDoc, serverTimestamp, doc, updateDoc, increment, arrayUnion, arrayRemove } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
 import { MessageSquare } from 'lucide-react';
 import { useSessionStore } from '@/hooks/useSession';
 import { usePosts } from '@/hooks/usePosts';
-import PostCard from '@/components/board/PostCard';
+import { useTeams } from '@/hooks/useTeams';
+import PostBoard from '@/components/board/PostBoard';
+import CommentPanel from '@/components/board/CommentPanel';
 import Tabs from '@/components/ui/tabs';
 import { SkeletonList } from '@/components/ui/skeleton';
 import EmptyState from '@/components/ui/empty-state';
-import Masonry from 'react-masonry-css';
 import { toast } from '@/components/ui/toast';
 import FeatureClosed from '@/components/ui/feature-closed';
 
@@ -22,9 +23,11 @@ export default function BoardPage() {
   const { courseId, sessionId, participantId, participantName, sessionData } = useSessionStore();
   const [sortBy, setSortBy] = useState<'newest' | 'popular'>('newest');
   const { posts, loading } = usePosts(sortBy);
+  const { teams } = useTeams();
   const [content, setContent] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [posting, setPosting] = useState(false);
+  const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
 
   const basePath = courseId && sessionId ? `courses/${courseId}/sessions/${sessionId}/posts` : '';
 
@@ -41,6 +44,11 @@ export default function BoardPage() {
         category: null,
         likeCount: 0,
         likedBy: [],
+        sectionId: null,
+        color: null,
+        pinned: false,
+        commentCount: 0,
+        attachments: [],
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
       });
@@ -130,22 +138,20 @@ export default function BoardPage() {
           description="첫 번째 글을 작성해보세요!"
         />
       ) : (
-        <Masonry
-          breakpointCols={{ default: 2, 480: 1 }}
-          className="masonry-grid"
-          columnClassName="masonry-grid_column"
-        >
-          {posts.map((post) => (
-            <div key={post.id} className="mb-3">
-              <PostCard
-                post={post}
-                currentUserId={participantId}
-                onToggleLike={handleLike}
-              />
-            </div>
-          ))}
-        </Masonry>
+        <PostBoard
+          posts={posts}
+          teams={teams}
+          currentUserId={participantId}
+          onToggleLike={handleLike}
+          onOpenComments={(postId) => setSelectedPostId(postId)}
+          showViewToggle
+        />
       )}
+
+      <CommentPanel
+        postId={selectedPostId}
+        onClose={() => setSelectedPostId(null)}
+      />
     </div>
   );
 }
