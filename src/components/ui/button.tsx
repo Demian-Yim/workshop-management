@@ -17,6 +17,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       danger: 'bg-red-600 hover:bg-red-700 text-white',
       ghost: 'hover:bg-slate-100 text-slate-600',
       admin: 'bg-purple-600 hover:bg-purple-700 text-white shadow-[var(--shadow-sm)]',
+      fab: 'bg-brand-gradient text-white shadow-[var(--shadow-brand)] hover:opacity-90 rounded-full !p-0 w-14 h-14',
     };
     const sizes = {
       sm: 'px-3 py-1.5 text-xs rounded-[var(--radius-sm)]',

@@ -1,12 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { Plus, Play, Square, Trash2, BarChart2, MessageCircle, Cloud, ChevronDown, ChevronUp } from 'lucide-react';
+import { Plus, Play, Square, Trash2, BarChart2, MessageCircle, Cloud, ChevronDown, ChevronUp, Timer } from 'lucide-react';
 import { useActivities } from '@/hooks/useActivities';
 import { useSessionStore } from '@/hooks/useSession';
 import PollView from '@/components/engagement/PollView';
 import QAView from '@/components/engagement/QAView';
 import WordCloudView from '@/components/engagement/WordCloudView';
+import BreakTimer from '@/components/session/BreakTimer';
 import { toast } from '@/components/ui/toast';
 import type { ActivityType } from '@/types/engagement';
 
@@ -30,6 +31,7 @@ export default function FacilitatorActivitiesPage() {
   const [prompt, setPrompt] = useState('');
   const [pollOptions, setPollOptions] = useState(['', '', '']);
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [showTimer, setShowTimer] = useState(false);
 
   const sessionOk = !!(courseId && sessionId);
 
@@ -85,12 +87,23 @@ export default function FacilitatorActivitiesPage() {
 
   return (
     <div className="animate-fade-in">
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-3xl font-bold text-white">라이브 활동</h1>
-          <p className="text-slate-400 mt-1">투표 · Q&A · 워드 클라우드</p>
+          <p className="text-slate-400 mt-1">투표 · Q&A · 워드 클라우드 · 타이머</p>
         </div>
         <div className="flex items-center gap-3">
+          <button
+            onClick={() => setShowTimer(!showTimer)}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition ${
+              showTimer
+                ? 'bg-amber-500/20 text-amber-300 hover:bg-amber-500/30'
+                : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+            }`}
+          >
+            <Timer className="w-4 h-4" />
+            타이머
+          </button>
           {activeActivity && (
             <button
               onClick={handleDeactivate}
@@ -109,6 +122,13 @@ export default function FacilitatorActivitiesPage() {
           </button>
         </div>
       </div>
+
+      {/* Break Timer Panel */}
+      {showTimer && (
+        <div className="mb-6">
+          <BreakTimer />
+        </div>
+      )}
 
       {/* Create Form */}
       {showForm && (

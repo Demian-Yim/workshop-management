@@ -1,6 +1,6 @@
 ﻿'use client';
 import { useState } from 'react';
-import { collection, doc, setDoc, writeBatch, serverTimestamp } from 'firebase/firestore';
+import { doc, writeBatch, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
 import { useSessionStore } from '@/hooks/useSession';
 import { useRealtimeCollection } from '@/hooks/useRealtimeCollection';
@@ -9,12 +9,16 @@ import { getTeamColor, generateId } from '@/lib/utils';
 import type { Participant } from '@/types/session';
 import type { Team } from '@/types/team';
 import { toast } from '@/components/ui/toast';
+import TeamRoulette from '@/components/team/TeamRoulette';
+import type { RouletteResult } from '@/components/team/TeamRoulette';
 
 export default function FacilitatorTeamPage() {
   const { courseId, sessionId } = useSessionStore();
   const basePath = courseId && sessionId ? `courses/${courseId}/sessions/${sessionId}` : '';
   const [numberOfTeams, setNumberOfTeams] = useState(4);
   const [assigning, setAssigning] = useState(false);
+  const [showRoulette, setShowRoulette] = useState(false);
+  const [rouletteResults, setRouletteResults] = useState<RouletteResult[]>([]);
 
   const { data: participants } = useRealtimeCollection<Participant>(
     basePath ? `${basePath}/participants` : '', [], !!basePath
@@ -55,6 +59,8 @@ export default function FacilitatorTeamPage() {
     setAssigning(false);
   };
 
+  const rouletteParticipants = participants.map((p) => ({ id: p.id, name: p.name }));
+
   return (
     <div className="animate-fade-in">
       <div className="flex items-center justify-between mb-8">
@@ -62,7 +68,41 @@ export default function FacilitatorTeamPage() {
           <h1 className="text-3xl font-bold text-white">팀 구성</h1>
           <p className="text-slate-400 mt-1">{participants.length}명의 학습자</p>
         </div>
+        <button
+          onClick={() => setShowRoulette(!showRoulette)}
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition ${
+            showRoulette
+              ? 'bg-purple-600 text-white'
+              : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+          }`}
+        >
+          🎰 {showRoulette ? '룰렛 닫기' : '마블 룰렛'}
+        </button>
       </div>
+
+      {/* Marble Roulette Panel */}
+      {showRoulette && (
+        <div className="mb-8">
+          <TeamRoulette
+            participants={rouletteParticipants}
+            onResult={(results) => setRouletteResults(results)}
+            dark
+          />
+          {rouletteResults.length > 0 && (
+            <div className="mt-3 bg-slate-800 rounded-xl p-4 border border-slate-700">
+              <p className="text-xs font-bold text-slate-400 mb-2">🏆 최종 결과</p>
+              <div className="flex gap-4 flex-wrap">
+                {rouletteResults.map((r) => (
+                  <span key={r.participant.id} className="text-sm text-slate-200">
+                    {['🥇','🥈','🥉'][r.rank - 1]} {r.participant.name}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
 
       {/* Controls */}
       <div className="bg-slate-800 rounded-xl p-6 border border-slate-700 mb-8">
